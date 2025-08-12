@@ -32,6 +32,7 @@ public class Image_Item extends javax.swing.JLayeredPane {
         progress2.setBorder(null);
         progress2.setForeground(new java.awt.Color(255, 255, 255));
         progress2.setValue(50);
+        progress2.setProgressType(com.nafiz.swing.Progress.ProgressType.CANCEL);
 
         pic.setLayer(progress2, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
@@ -51,6 +52,8 @@ public class Image_Item extends javax.swing.JLayeredPane {
                 .addComponent(progress2, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(20, Short.MAX_VALUE))
         );
+
+        setLayer(pic, javax.swing.JLayeredPane.DEFAULT_LAYER);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
