@@ -22,13 +22,14 @@ public class Chat_Body extends javax.swing.JPanel {
     public Chat_Body() {
         initComponents();
         init();
+
         addItemLeft("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", "Nafiz");
         addItemRight("Hello \ntewffedgg\nygeygd");
         addItemLeft("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", "Kalam", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
         addItemRight("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/cat.png")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
-        addItemLeft("Hello \ntewffedgg\nygeygd", "Oli");
         addDate("05/06/2021");
-
+        String img[] = {"LRMj,K-:?G9G_JIon}WqD~ITRPs,", "LOI}-B004pI;~qROIoW=4:jYxtxu"};
+        addItemLeft("Hello \ntewffedgg\nygeygd", "Oli", img);
         addItemRight("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...");
         addItemLeft("Hello \ntewffedgg\nygeygd", "Proshanto", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg")));
         addItemRight("Hello \ntewffedgg\nygeygd", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
@@ -54,7 +55,18 @@ public class Chat_Body extends javax.swing.JPanel {
         //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
-
+    }
+    
+        public void addItemLeft(String text, String user, String[] image) {
+        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
+        item.setText(text);
+        item.setImage(image);
+        item.setTime();
+        item.setUserProfile(user);
+        body.add(item, "wrap, w 100:: 50%");
+        //  ::50% set max  with 50%
+        body.repaint();
+        body.revalidate();
     }
 
     public void addItemRight(String text, Icon... image) {
@@ -67,7 +79,7 @@ public class Chat_Body extends javax.swing.JPanel {
         body.revalidate();
 
     }
-
+    
     public void addDate(String date) {
         Chat_Date item = new Chat_Date();
         item.setDate(date);

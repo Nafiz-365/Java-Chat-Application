@@ -76,6 +76,16 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         layer.add(chatImage);
         add(layer);
     }
+    
+    public void setImage(boolean right, String... image) {
+        JLayeredPane layer = new JLayeredPane();
+        layer.setLayout(new FlowLayout(right ? FlowLayout.RIGHT : FlowLayout.LEFT));
+        layer.setBorder(new EmptyBorder(0, 5, 0, 5));
+        Chat_Image chatImage = new Chat_Image(right);
+        chatImage.addImage(image);
+        layer.add(chatImage);
+        add(layer);
+    }
 
     public void sendSuccess() {
         if (label != null) {

@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package com.nafiz.component;
 
 import java.awt.Color;
@@ -34,6 +31,10 @@ public class Chat_Right extends javax.swing.JLayeredPane {
 
     public void setImage(Icon... image) {
         txt.setImage(true, image);
+    }
+    
+    public void setImage(String... image) {
+        txt.setImage(false, image);
     }
 
     public void setTime() {

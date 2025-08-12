@@ -40,6 +40,15 @@ public class Chat_Image extends javax.swing.JLayeredPane {
             add(pic, "wrap");
         }
     }
+    
+    public void addImage(String... images) {
+        for (String image : images) {
+            Image_Item pic = new Image_Item();
+            pic.setPreferredSize(new Dimension(200, 200));
+            pic.setImage(image);
+            add(pic, "wrap");
+        }
+    }
 
     private void addEvent(Component com, Icon image) {
         com.setCursor(new Cursor(Cursor.HAND_CURSOR));
