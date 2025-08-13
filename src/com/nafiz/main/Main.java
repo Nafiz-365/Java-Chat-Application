@@ -4,7 +4,9 @@
  */
 package com.nafiz.main;
 
+import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
 import com.nafiz.event.EventImageView;
+import com.nafiz.event.EventMain;
 import com.nafiz.event.PublicEvent;
 import com.nafiz.swing.ComponentResizer;
 import java.awt.Dimension;
@@ -34,12 +36,25 @@ public class Main extends javax.swing.JFrame {
         com.setMinimumSize(new Dimension(900, 500));
         com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
         com.setSnapSize(new Dimension(10, 10));
+        login.setVisible(true);
+        loading1.setVisible(false);
         view_Image.setVisible(false);
-        home.setVisible(true);
+        home.setVisible(false);
         initEvent();
     }
 
     private void initEvent() {
+        PublicEvent.getInstance().addEventMain(new EventMain() {
+            @Override
+            public void showLoading(boolean show) {
+                loading1.setVisible(show);
+            }
+
+            @Override
+            public void initChat() {
+                home.setVisible(true);
+            }
+        });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
             @Override
             public void viewImage(Icon image) {
@@ -70,6 +85,8 @@ public class Main extends javax.swing.JFrame {
         cmdMinimize = new javax.swing.JButton();
         cmdClose = new javax.swing.JButton();
         body = new javax.swing.JLayeredPane();
+        loading1 = new com.nafiz.form.Loading();
+        login = new com.nafiz.form.Login();
         view_Image = new com.nafiz.form.View_Image();
         home = new com.nafiz.form.Home();
 
@@ -133,6 +150,8 @@ public class Main extends javax.swing.JFrame {
         );
 
         body.setLayout(new java.awt.CardLayout());
+        body.add(loading1, "card5");
+        body.add(login, "card4");
         body.setLayer(view_Image, javax.swing.JLayeredPane.POPUP_LAYER);
         body.add(view_Image, "card3");
         body.add(home, "card2");
@@ -211,7 +230,7 @@ public class Main extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
+        FlatArcIJTheme.setup();
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
@@ -250,6 +269,8 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton cmdClose;
     private javax.swing.JButton cmdMinimize;
     private com.nafiz.form.Home home;
+    private com.nafiz.form.Loading loading1;
+    private com.nafiz.form.Login login;
     private javax.swing.JPanel title;
     private com.nafiz.form.View_Image view_Image;
     // End of variables declaration//GEN-END:variables
