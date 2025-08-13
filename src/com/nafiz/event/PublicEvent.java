@@ -11,8 +11,8 @@ package com.nafiz.event;
 public class PublicEvent {
 
     private static PublicEvent instance;
-    
     private EventImageView eventImageView;
+    private EventChat eventChat;
 
     public static PublicEvent getInstance() {
         if (instance == null) {
@@ -24,13 +24,25 @@ public class PublicEvent {
     private PublicEvent() {
 
     }
-    
-    public void addEventImageView(EventImageView event){
+
+    public void addEventImageView(EventImageView event) {
         this.eventImageView = event;
     }
-    
-    public EventImageView getEventImageView(){
+
+    public void addEventChat(EventChat event) {
+        this.eventChat = event;
+    }
+
+    public EventImageView getEventImageView() {
         return eventImageView;
+    }
+
+    public EventChat getEventChat() {
+        return eventChat;
+    }
+
+    public Object addEventChat() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 
 }
