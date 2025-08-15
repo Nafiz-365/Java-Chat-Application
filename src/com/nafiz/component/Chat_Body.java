@@ -29,8 +29,8 @@ public class Chat_Body extends javax.swing.JPanel {
 //      addItemLeft("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", "Nafiz");
 //        addItemRight("Hello \ntewffedgg\nygeygd");
 //        addItemLeft("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", "Kalam", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
-        //      addItemRight("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/cat.png")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
-//        addDate("05/06/2021");
+//        addItemRight("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/cat.png")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
+        addDate("05/06/2021");
 //        String img[] = {"LRMj,K-:?G9G_JIon}WqD~ITRPs,", "LOI}-B004pI;~qROIoW=4:jYxtxu"};
 //        addItemLeft("Hello \ntewffedgg\nygeygd", "Oli", img);
         addItemRight("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...");

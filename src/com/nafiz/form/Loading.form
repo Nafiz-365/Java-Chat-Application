@@ -42,7 +42,7 @@
     <Component class="javax.swing.JLabel" name="lb">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/com/nafiz/icon/loading.gif"/>
+          <Image iconType="3" name="/com/nafiz/icon/waiting.gif"/>
         </Property>
       </Properties>
     </Component>

@@ -34,7 +34,7 @@ public class Loading extends javax.swing.JComponent {
 
         setBackground(new java.awt.Color(0, 0, 0));
 
-        lb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/loading.gif"))); // NOI18N
+        lb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/waiting.gif"))); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
