@@ -19,6 +19,11 @@ public class P_Login extends javax.swing.JPanel {
         initComponents();
     }
 
+    public void resetForm() {
+        txtPass.setText("");
+        txtUser.requestFocusInWindow();
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -35,15 +40,49 @@ public class P_Login extends javax.swing.JPanel {
         txtPass = new javax.swing.JPasswordField();
         cmdLogin = new javax.swing.JButton();
         cmdRegister = new javax.swing.JButton();
+        rememberMe = new javax.swing.JCheckBox();
+        showPassword = new javax.swing.JCheckBox();
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(java.awt.Color.WHITE);
+        setOpaque(true);
+        setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        rememberMe.setText("Remember me");
+        rememberMe.setOpaque(false);
+        rememberMe.setForeground(new java.awt.Color(71, 85, 105));
+        showPassword.setText("Show password");
+        showPassword.setOpaque(false);
+        showPassword.setForeground(new java.awt.Color(71, 85, 105));
+        showPassword.addActionListener(evt -> txtPass.setEchoChar(
+                showPassword.isSelected() ? (char) 0 : '\u2022'));
+        String savedUser = java.util.prefs.Preferences.userNodeForPackage(P_Login.class)
+                .get("username", "");
+        txtUser.setText(savedUser);
+        rememberMe.setSelected(!savedUser.isEmpty());
+        txtUser.setOpaque(true);
+        txtUser.setBackground(new java.awt.Color(248, 250, 252));
+        txtUser.setForeground(new java.awt.Color(15, 23, 42));
+        txtUser.setCaretColor(new java.awt.Color(15, 23, 42));
+        txtUser.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(203, 213, 225), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(7, 10, 7, 10)));
+        txtUser.setPreferredSize(new java.awt.Dimension(240, 38));
+        txtPass.setOpaque(true);
+        txtPass.setBackground(new java.awt.Color(248, 250, 252));
+        txtPass.setForeground(new java.awt.Color(15, 23, 42));
+        txtPass.setCaretColor(new java.awt.Color(15, 23, 42));
+        txtPass.setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(203, 213, 225), 1, true),
+                javax.swing.BorderFactory.createEmptyBorder(7, 10, 7, 10)));
+        txtPass.setPreferredSize(new java.awt.Dimension(240, 38));
+        txtPass.setEchoChar('\u2022');
 
-        lbTitle.setFont(new java.awt.Font("Segoe UI", 0, 30)); // NOI18N
-        lbTitle.setForeground(new java.awt.Color(87, 87, 87));
+        lbTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 24)); // NOI18N
+        lbTitle.setForeground(new java.awt.Color(15, 23, 42));
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Login ");
+        lbTitle.setText("Welcome back");
 
-        jLabel1.setText("User Name");
+        jLabel1.setForeground(new java.awt.Color(71, 85, 105));
+        jLabel1.setText("Username");
 
         txtUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -51,24 +90,29 @@ public class P_Login extends javax.swing.JPanel {
             }
         });
 
+        jLabel2.setForeground(new java.awt.Color(71, 85, 105));
         jLabel2.setText("Password");
 
         txtPass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtPassActionPerformed(evt);
+                cmdLoginActionPerformed(evt);
             }
         });
 
         cmdLogin.setText("Login");
+        cmdLogin.setBackground(new java.awt.Color(37, 99, 235));
+        cmdLogin.setForeground(java.awt.Color.WHITE);
+        cmdLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 12, 8, 12));
+        cmdLogin.setFocusPainted(false);
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdLoginActionPerformed(evt);
             }
         });
 
-        cmdRegister.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        cmdRegister.setForeground(new java.awt.Color(15, 128, 206));
-        cmdRegister.setText("Register");
+        cmdRegister.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
+        cmdRegister.setForeground(new java.awt.Color(37, 99, 235));
+        cmdRegister.setText("Don't have an account? Register");
         cmdRegister.setContentAreaFilled(false);
         cmdRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
@@ -77,41 +121,40 @@ public class P_Login extends javax.swing.JPanel {
             }
         });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(lbTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(cmdRegister, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)
-                    .addComponent(cmdLogin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtPass)
-                    .addComponent(txtUser, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(20, 20, 20))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(20, 20, 20)
-                .addComponent(lbTitle)
-                .addGap(20, 20, 20)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(cmdLogin)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmdRegister)
-                .addGap(0, 106, Short.MAX_VALUE))
-        );
+        setLayout(new java.awt.GridBagLayout());
+        java.awt.GridBagConstraints constraints = new java.awt.GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.weightx = 1.0;
+        constraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+
+        constraints.gridy = 0;
+        constraints.insets = new java.awt.Insets(10, 20, 18, 20);
+        add(lbTitle, constraints);
+        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+        constraints.gridy++;
+        add(jLabel1, constraints);
+        constraints.gridy++;
+        add(txtUser, constraints);
+        constraints.gridy++;
+        add(jLabel2, constraints);
+        constraints.gridy++;
+        add(txtPass, constraints);
+
+        javax.swing.JPanel options = new javax.swing.JPanel(new java.awt.GridLayout(1, 2));
+        options.setOpaque(false);
+        options.add(rememberMe);
+        options.add(showPassword);
+        constraints.gridy++;
+        constraints.insets = new java.awt.Insets(4, 20, 10, 20);
+        add(options, constraints);
+
+        constraints.gridy++;
+        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+        add(cmdLogin, constraints);
+        constraints.gridy++;
+        constraints.insets = new java.awt.Insets(2, 20, 10, 20);
+        add(cmdRegister, constraints);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPassActionPerformed
@@ -123,8 +166,19 @@ public class P_Login extends javax.swing.JPanel {
     }//GEN-LAST:event_txtUserActionPerformed
 
     private void cmdLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdLoginActionPerformed
-
-        PublicEvent.getInstance().getEventLogin().login();
+        if (txtUser.getText().trim().isEmpty() || txtPass.getPassword().length == 0) {
+            javax.swing.JOptionPane.showMessageDialog(this,
+                    "Please enter your username and password.", "Sign in", javax.swing.JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        java.util.prefs.Preferences preferences = java.util.prefs.Preferences.userNodeForPackage(P_Login.class);
+        if (rememberMe.isSelected()) {
+            preferences.put("username", txtUser.getText().trim());
+        } else {
+            preferences.remove("username");
+        }
+        char[] password = txtPass.getPassword();
+        PublicEvent.getInstance().getEventLogin().login(txtUser.getText().trim(), password);
 
     }//GEN-LAST:event_cmdLoginActionPerformed
 
@@ -136,6 +190,8 @@ public class P_Login extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton cmdLogin;
     private javax.swing.JButton cmdRegister;
+    private javax.swing.JCheckBox rememberMe;
+    private javax.swing.JCheckBox showPassword;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel lbTitle;

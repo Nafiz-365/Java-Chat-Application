@@ -5,6 +5,7 @@
 package com.nafiz.main;
 
 import com.formdev.flatlaf.intellijthemes.FlatArcIJTheme;
+import com.nafiz.auth.Session;
 import com.nafiz.event.EventImageView;
 import com.nafiz.event.EventMain;
 import com.nafiz.event.PublicEvent;
@@ -12,7 +13,6 @@ import com.nafiz.swing.ComponentResizer;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -30,10 +30,9 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void init() {
-        setIconImage(new ImageIcon(getClass().getResource("/com/nafiz/icon/icon.png")).getImage());
         ComponentResizer com = new ComponentResizer();
         com.registerComponent(this);
-        com.setMinimumSize(new Dimension(900, 500));
+        com.setMinimumSize(new Dimension(640, 480));
         com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
         com.setSnapSize(new Dimension(10, 10));
         login.setVisible(true);
@@ -52,7 +51,20 @@ public class Main extends javax.swing.JFrame {
 
             @Override
             public void initChat() {
+                home.connectChat();
+                home.refreshSession(Session.getUsername());
                 home.setVisible(true);
+                login.setVisible(false);
+            }
+
+            @Override
+            public void logout() {
+                home.disconnectChat();
+                login.resetForms();
+                loading1.setVisible(false);
+                Session.clear();
+                home.setVisible(false);
+                login.setVisible(true);
             }
         });
         PublicEvent.getInstance().addEventImageView(new EventImageView() {
@@ -83,6 +95,7 @@ public class Main extends javax.swing.JFrame {
         background = new javax.swing.JPanel();
         title = new javax.swing.JPanel();
         cmdMinimize = new javax.swing.JButton();
+        cmdMaximize = new javax.swing.JButton();
         cmdClose = new javax.swing.JButton();
         body = new javax.swing.JLayeredPane();
         loading1 = new com.nafiz.form.Loading();
@@ -93,10 +106,12 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        border.setBackground(new java.awt.Color(217, 230, 236));
+        border.setBackground(new java.awt.Color(30, 41, 59));
 
-        background.setBackground(new java.awt.Color(255, 255, 255));
+        background.setBackground(new java.awt.Color(248, 250, 252));
+        title.setBackground(new java.awt.Color(15, 23, 42));
 
+        title.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 8));
         title.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 titleMouseDragged(evt);
@@ -108,20 +123,22 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        cmdMinimize.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/minimize-window.png"))); // NOI18N
-        cmdMinimize.setBorder(null);
-        cmdMinimize.setContentAreaFilled(false);
-        cmdMinimize.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        styleWindowButton(cmdMinimize, "−", new java.awt.Color(51, 65, 85), new java.awt.Color(71, 85, 105));
         cmdMinimize.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdMinimizeActionPerformed(evt);
             }
         });
 
-        cmdClose.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/cross-mark.png"))); // NOI18N
-        cmdClose.setBorder(null);
-        cmdClose.setContentAreaFilled(false);
-        cmdClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        styleWindowButton(cmdMaximize, "□", new java.awt.Color(51, 65, 85), new java.awt.Color(71, 85, 105));
+        cmdMaximize.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmdMaximizeActionPerformed(evt);
+            }
+        });
+
+        styleWindowButton(cmdClose, "×", new java.awt.Color(51, 65, 85), new java.awt.Color(220, 38, 38));
+        cmdClose.setForeground(new java.awt.Color(248, 113, 113));
         cmdClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdCloseActionPerformed(evt);
@@ -133,10 +150,10 @@ public class Main extends javax.swing.JFrame {
         titleLayout.setHorizontalGroup(
             titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, titleLayout.createSequentialGroup()
-                .addContainerGap(950, Short.MAX_VALUE)
-                .addComponent(cmdMinimize)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmdClose, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(0, Short.MAX_VALUE)
+                .addComponent(cmdMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmdMaximize, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(cmdClose, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         titleLayout.setVerticalGroup(
@@ -144,9 +161,10 @@ public class Main extends javax.swing.JFrame {
             .addGroup(titleLayout.createSequentialGroup()
                 .addGap(0, 0, 0)
                 .addGroup(titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmdMinimize, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(cmdClose, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(cmdMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdMaximize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cmdClose, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
 
         body.setLayout(new java.awt.CardLayout());
@@ -209,6 +227,45 @@ public class Main extends javax.swing.JFrame {
 
     private int pX;
     private int pY;
+
+    private void styleWindowButton(javax.swing.JButton button, String text,
+            java.awt.Color normalColor, java.awt.Color hoverColor) {
+        button.setText(text);
+        button.setFont(new java.awt.Font("Segoe UI Symbol", java.awt.Font.PLAIN, text.equals("×") ? 18 : 15));
+        button.setForeground(new java.awt.Color(226, 232, 240));
+        button.setBackground(normalColor);
+        button.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        button.setContentAreaFilled(true);
+        button.setOpaque(true);
+        button.setFocusPainted(false);
+        button.setRolloverEnabled(false);
+        button.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        button.setPreferredSize(new java.awt.Dimension(42, 30));
+        button.setMinimumSize(new java.awt.Dimension(42, 30));
+        button.setMaximumSize(new java.awt.Dimension(42, 30));
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent event) {
+                button.setBackground(hoverColor);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent event) {
+                button.setBackground(normalColor);
+            }
+
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent event) {
+                button.setBackground(hoverColor.darker());
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent event) {
+                button.setBackground(button.contains(event.getPoint()) ? hoverColor : normalColor);
+            }
+        });
+    }
+
     private void titleMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleMouseDragged
         this.setLocation(this.getLocation().x + evt.getX() - pX, this.getLocation().y + evt.getY() - pY);
     }//GEN-LAST:event_titleMouseDragged
@@ -219,6 +276,9 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_titleMousePressed
 
     private void cmdCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdCloseActionPerformed
+        login.cancelAuthentication();
+        home.disconnectChat();
+        Session.clear();
         System.exit(0);
     }//GEN-LAST:event_cmdCloseActionPerformed
 
@@ -226,34 +286,21 @@ public class Main extends javax.swing.JFrame {
         this.setState(JFrame.ICONIFIED);
     }//GEN-LAST:event_cmdMinimizeActionPerformed
 
+    private void cmdMaximizeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdMaximizeActionPerformed
+        if ((getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH) {
+            setExtendedState(JFrame.NORMAL);
+            cmdMaximize.setText("□");
+        } else {
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
+            cmdMaximize.setText("❐");
+        }
+    }//GEN-LAST:event_cmdMaximizeActionPerformed
+
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String[] args) {
         FlatArcIJTheme.setup();
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -267,6 +314,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JLayeredPane body;
     private javax.swing.JPanel border;
     private javax.swing.JButton cmdClose;
+    private javax.swing.JButton cmdMaximize;
     private javax.swing.JButton cmdMinimize;
     private com.nafiz.form.Home home;
     private com.nafiz.form.Loading loading1;

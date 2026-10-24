@@ -10,9 +10,9 @@ package com.nafiz.event;
  */
 public interface EventLogin {
 
-    public void login();
+    public void login(String username, char[] password);
 
-    public void register();
+    public void register(String username, char[] password);
 
     public void goRegister();
 

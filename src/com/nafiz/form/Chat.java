@@ -7,6 +7,11 @@ package com.nafiz.form;
 import com.nafiz.component.Chat_Body;
 import com.nafiz.component.Chat_Bottom;
 import com.nafiz.component.Chat_Title;
+import com.nafiz.auth.Session;
+import com.nafiz.chat.ChatMessage;
+import com.nafiz.chat.ChatTransport;
+import com.nafiz.chat.LocalConversationService;
+import com.nafiz.chat.LocalChatTransport;
 import com.nafiz.event.EventChat;
 import com.nafiz.event.PublicEvent;
 import net.miginfocom.swing.MigLayout;
@@ -16,6 +21,7 @@ import net.miginfocom.swing.MigLayout;
  * @author Nafiz_365
  */
 public class Chat extends javax.swing.JPanel {
+    private ChatTransport transport;
 
     /**
      * Creates new form Menu_Left
@@ -30,10 +36,37 @@ public class Chat extends javax.swing.JPanel {
         Chat_Title chatTitle = new Chat_Title();
         Chat_Body chatBody = new Chat_Body();
         Chat_Bottom chatBottom = new Chat_Bottom();
+        transport = new LocalChatTransport(new LocalConversationService());
+        transport.setListener(new ChatTransport.Listener() {
+            @Override
+            public void onConnected() {
+            }
+
+            @Override
+            public void onMessage(ChatMessage message) {
+                javax.swing.SwingUtilities.invokeLater(() -> chatBody.addItemRight(message));
+            }
+
+            @Override
+            public void onError(String message) {
+                javax.swing.SwingUtilities.invokeLater(() ->
+                        javax.swing.JOptionPane.showMessageDialog(Chat.this, message,
+                                "Message unavailable", javax.swing.JOptionPane.WARNING_MESSAGE));
+            }
+
+            @Override
+            public void onDisconnected() {
+            }
+        });
+        transport.connect();
         PublicEvent.getInstance().addEventChat(new EventChat() {
             @Override
             public void sendMessage(String text) {
-                chatBody.addItemRight(text);
+                String sender = Session.getUsername();
+                if (sender == null) {
+                    return;
+                }
+                transport.send("local", sender, text);
             }
         });
 
@@ -41,6 +74,18 @@ public class Chat extends javax.swing.JPanel {
         add(chatBody, "wrap");
         add(chatBottom, "h :: 50%");
 
+    }
+
+    public void connect() {
+        if (!transport.isConnected()) {
+            transport.connect();
+        }
+    }
+
+    public void disconnect() {
+        if (transport.isConnected()) {
+            transport.disconnect();
+        }
     }
 
     /**

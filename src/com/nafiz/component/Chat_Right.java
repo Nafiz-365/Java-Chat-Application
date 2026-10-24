@@ -1,6 +1,9 @@
 package com.nafiz.component;
 
 import java.awt.Color;
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import javax.swing.Icon;
 
 /**
@@ -42,6 +45,11 @@ public class Chat_Right extends javax.swing.JLayeredPane {
 
     public void setTime() {
         txt.setTime("10:30 PM");  //Testing
+    }
+
+    public void setTime(Instant time) {
+        txt.setTime(DateTimeFormatter.ofPattern("hh:mm a")
+                .withZone(ZoneId.systemDefault()).format(time));
     }
 
     /**

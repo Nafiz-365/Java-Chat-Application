@@ -27,6 +27,7 @@ public class PanelSlide extends javax.swing.JPanel {
 
     public PanelSlide() {
         list = new ArrayList<>();
+        setLayout(null);
         timer = new Timer(0, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -48,7 +49,7 @@ public class PanelSlide extends javax.swing.JPanel {
         if (com.length > 0) {
             for (Component c : com) {
                 list.add(c);
-                c.setSize(getPreferredSize());
+                c.setBounds(0, 0, getWidth(), getHeight());
                 c.setVisible(false);
                 this.add(c);
             }
@@ -56,6 +57,15 @@ public class PanelSlide extends javax.swing.JPanel {
             Component show = list.get(0);
             show.setVisible(true);
             show.setLocation(0, 0);
+        }
+    }
+
+    @Override
+    public void doLayout() {
+        for (Component component : list) {
+            if (!timer.isRunning() || component == comExit || component == comShow) {
+                component.setSize(getWidth(), getHeight());
+            }
         }
     }
 

@@ -10,52 +10,49 @@ package com.nafiz.event;
  */
 public class PublicEvent {
 
-    private static PublicEvent instance;
+    private static final PublicEvent INSTANCE = new PublicEvent();
     private EventMain eventMain;
     private EventImageView eventImageView;
     private EventChat eventChat;
     private EventLogin eventLogin;
 
     public static PublicEvent getInstance() {
-        if (instance == null) {
-            instance = new PublicEvent();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     private PublicEvent() {
 
     }
 
-    public void addEventMain(EventMain event){
+    public synchronized void addEventMain(EventMain event){
         this.eventMain = event;
     }
     
-    public void addEventImageView(EventImageView event) {
+    public synchronized void addEventImageView(EventImageView event) {
         this.eventImageView = event;
     }
 
-    public void addEventChat(EventChat event) {
+    public synchronized void addEventChat(EventChat event) {
         this.eventChat = event;
     }
 
-    public void addEventLogin(EventLogin event) {
+    public synchronized void addEventLogin(EventLogin event) {
         this.eventLogin = event;
     }
     
-    public EventMain getEventMain(){
+    public synchronized EventMain getEventMain(){
         return eventMain;
     }
 
-    public EventImageView getEventImageView() {
+    public synchronized EventImageView getEventImageView() {
         return eventImageView;
     }
 
-    public EventChat getEventChat() {
+    public synchronized EventChat getEventChat() {
         return eventChat;
     }
 
-    public EventLogin getEventLogin() {
+    public synchronized EventLogin getEventLogin() {
         return eventLogin;
     }
 

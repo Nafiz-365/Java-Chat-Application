@@ -7,6 +7,8 @@ package com.nafiz.form;
 import net.miginfocom.swing.MigLayout;
 
 public class Home extends javax.swing.JLayeredPane {
+    private Menu_Right menuRight;
+    private Chat chat;
 
     public Home() {
         initComponents();
@@ -16,8 +18,28 @@ public class Home extends javax.swing.JLayeredPane {
     private void init() {
         setLayout(new MigLayout("fillx, filly", "0[200!]5[fill, 100%]5[200!]0", "0[fill]0"));
         this.add(new Menu_Left());
-        this.add(new Chat());
-        this.add(new Menu_Right());
+        chat = new Chat();
+        this.add(chat);
+        menuRight = new Menu_Right();
+        this.add(menuRight);
+    }
+
+    public void refreshSession(String username) {
+        if (menuRight != null) {
+            menuRight.setUsername(username);
+        }
+    }
+
+    public void connectChat() {
+        if (chat != null) {
+            chat.connect();
+        }
+    }
+
+    public void disconnectChat() {
+        if (chat != null) {
+            chat.disconnect();
+        }
     }
 
     /**

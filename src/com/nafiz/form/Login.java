@@ -1,21 +1,37 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package com.nafiz.form;
 
+import com.nafiz.auth.AuthService;
+import com.nafiz.auth.Session;
 import com.nafiz.event.EventLogin;
 import com.nafiz.event.PublicEvent;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 
-/**
- *
- * @author Nafiz_365
- */
 public class Login extends javax.swing.JPanel {
 
-    /**
-     * Creates new form Login
-     */
+    private final CardLayout cards = new CardLayout();
+    private final JPanel forms = new JPanel(cards);
+    private final AuthService authService = new AuthService();
+    private P_Login loginForm;
+    private P_Register registerForm;
+    private volatile boolean authenticating;
+    private volatile Thread authenticationThread;
+    private volatile long authenticationGeneration;
+
     public Login() {
         initComponents();
         init();
@@ -24,171 +40,216 @@ public class Login extends javax.swing.JPanel {
     private void init() {
         PublicEvent.getInstance().addEventLogin(new EventLogin() {
             @Override
-            public void login() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        PublicEvent.getInstance().getEventMain().showLoading(true);
-                        try {
-                            Thread.sleep(3000); // for test
-                        } catch (InterruptedException e) {
-
-                        }
-                        PublicEvent.getInstance().getEventMain().showLoading(false);
-                        PublicEvent.getInstance().getEventMain().initChat();
-                        setVisible(false);
+            public void login(String username, char[] password) {
+                if (authenticating) {
+                    return;
+                }
+                authenticating = true;
+                long generation = ++authenticationGeneration;
+                authenticationThread = new Thread(() -> {
+                    javax.swing.SwingUtilities.invokeLater(
+                            () -> {
+                                if (generation == authenticationGeneration) {
+                                    PublicEvent.getInstance().getEventMain().showLoading(true);
+                                }
+                            });
+                    try {
+                        Thread.sleep(900);
+                    } catch (InterruptedException ex) {
+                        Thread.currentThread().interrupt();
+                        javax.swing.SwingUtilities.invokeLater(() -> {
+                            if (generation == authenticationGeneration) {
+                                authenticating = false;
+                                PublicEvent.getInstance().getEventMain().showLoading(false);
+                            }
+                        });
+                        return;
                     }
-
-                }).start();
-
+                    AuthService.AuthResult result;
+                    try {
+                        result = authService.authenticate(username, password);
+                    } catch (IllegalArgumentException ex) {
+                        result = AuthService.AuthResult.failure(ex.getMessage());
+                    } finally {
+                        java.util.Arrays.fill(password, '\0');
+                    }
+                    AuthService.AuthResult finalResult = result;
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        if (generation != authenticationGeneration) {
+                            return;
+                        }
+                        authenticating = false;
+                        authenticationThread = null;
+                        PublicEvent.getInstance().getEventMain().showLoading(false);
+                        if (finalResult.successful()) {
+                            Session.start(username);
+                            PublicEvent.getInstance().getEventMain().initChat();
+                        } else {
+                            javax.swing.JOptionPane.showMessageDialog(Login.this,
+                                    finalResult.message(), "Sign in failed",
+                                    javax.swing.JOptionPane.WARNING_MESSAGE);
+                        }
+                    });
+                }, "chat-authentication");
+                authenticationThread.start();
             }
 
             @Override
-            public void register() {
-                System.out.println("Register");
+            public void register(String username, char[] password) {
+                new Thread(() -> {
+                    AuthService.AuthResult result;
+                    try {
+                        result = authService.register(username, password);
+                    } catch (IllegalArgumentException ex) {
+                        result = AuthService.AuthResult.failure(ex.getMessage());
+                    } finally {
+                        java.util.Arrays.fill(password, '\0');
+                    }
+                    AuthService.AuthResult finalResult = result;
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        javax.swing.JOptionPane.showMessageDialog(Login.this,
+                                finalResult.message(), "Create account",
+                                finalResult.successful()
+                                        ? javax.swing.JOptionPane.INFORMATION_MESSAGE
+                                        : javax.swing.JOptionPane.WARNING_MESSAGE);
+                        if (finalResult.successful()) {
+                            registerForm.resetForm();
+                            cards.show(forms, "login");
+                        }
+                    });
+                }).start();
             }
 
             @Override
             public void goRegister() {
-                slide.show(1);
+                cards.show(forms, "register");
             }
 
             @Override
             public void goLogin() {
-                slide.show(0);
+                cards.show(forms, "login");
             }
         });
-        P_Login login = new P_Login();
-        P_Register register = new P_Register();
-        slide.init(login, register);
-
+        loginForm = new P_Login();
+        registerForm = new P_Register();
+        forms.add(loginForm, "login");
+        forms.add(registerForm, "register");
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        setLayout(new BorderLayout());
+        JPanel page = new BackgroundPanel();
+        page.setLayout(new GridBagLayout());
 
-        pic = new com.nafiz.swing.PictureBox();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
-        slide = new com.nafiz.swing.PanelSlide();
+        RoundedPanel card = new RoundedPanel(new BorderLayout(0, 12), 24);
+        card.setBackground(new Color(255, 255, 255, 242));
+        card.setBorder(javax.swing.BorderFactory.createEmptyBorder(30, 34, 34, 34));
+        card.setPreferredSize(new Dimension(400, 470));
 
-        setBackground(new java.awt.Color(0, 0, 0));
+        JPanel heading = new JPanel(new BorderLayout(0, 6));
+        heading.setOpaque(false);
+        JLabel brand = new JLabel("FURY CHAT");
+        brand.setForeground(new Color(37, 99, 235));
+        brand.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        JLabel title = new JLabel("Connect with your people");
+        title.setForeground(new Color(15, 23, 42));
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        heading.add(brand, BorderLayout.NORTH);
+        heading.add(title, BorderLayout.CENTER);
+        card.add(heading, BorderLayout.NORTH);
 
-        pic.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/login_image.png"))); // NOI18N
+        forms.setOpaque(false);
+        card.add(forms, BorderLayout.CENTER);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Fury World");
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(24, 24, 24, 24);
+        page.add(card, constraints);
+        page.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent event) {
+                int width = Math.min(400, Math.max(320, page.getWidth() - 48));
+                int height = Math.min(470, Math.max(430, page.getHeight() - 48));
+                card.setPreferredSize(new Dimension(width, height));
+                page.revalidate();
+            }
+        });
+        add(page, BorderLayout.CENTER);
+    }
 
-        pic.setLayer(jLabel2, javax.swing.JLayeredPane.DEFAULT_LAYER);
+    public void cancelAuthentication() {
+        authenticationGeneration++;
+        authenticating = false;
+        Thread thread = authenticationThread;
+        authenticationThread = null;
+        if (thread != null) {
+            thread.interrupt();
+        }
+    }
 
-        javax.swing.GroupLayout picLayout = new javax.swing.GroupLayout(pic);
-        pic.setLayout(picLayout);
-        picLayout.setHorizontalGroup(
-            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(picLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(jLabel2)
-                .addContainerGap(505, Short.MAX_VALUE))
-        );
-        picLayout.setVerticalGroup(
-            picLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, picLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(0, 0, 0))
-        );
+    public void resetForms() {
+        cancelAuthentication();
+        loginForm.resetForm();
+        registerForm.resetForm();
+        cards.show(forms, "login");
+    }
 
-        jLabel1.setBackground(new java.awt.Color(34, 142, 214));
-        jLabel1.setOpaque(true);
+    private static final class RoundedPanel extends JPanel {
+        private final int arc;
 
-        jPanel1.setBackground(new java.awt.Color(34, 142, 214));
+        private RoundedPanel(java.awt.LayoutManager layout, int arc) {
+            super(layout);
+            this.arc = arc;
+            setOpaque(false);
+        }
 
-        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+        @Override
+        protected void paintComponent(Graphics graphics) {
+            Graphics2D g2 = (Graphics2D) graphics.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(getBackground());
+            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
+            g2.setColor(new Color(203, 213, 225));
+            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
+            g2.dispose();
+            super.paintComponent(graphics);
+        }
+    }
 
-        slide.setBackground(new java.awt.Color(204, 204, 204));
+    private static final class BackgroundPanel extends JPanel {
+        private final Image background;
 
-        javax.swing.GroupLayout slideLayout = new javax.swing.GroupLayout(slide);
-        slide.setLayout(slideLayout);
-        slideLayout.setHorizontalGroup(
-            slideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 284, Short.MAX_VALUE)
-        );
-        slideLayout.setVerticalGroup(
-            slideLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 338, Short.MAX_VALUE)
-        );
+        private BackgroundPanel() {
+            setOpaque(true);
+            java.net.URL resource = Login.class.getResource("/com/nafiz/icon/chat-login-background.png");
+            if (resource != null) {
+                background = new ImageIcon(resource).getImage();
+            } else {
+                background = new BufferedImage(2, 2, BufferedImage.TYPE_INT_RGB);
+            }
+        }
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(slide, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(slide, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
-        this.setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(pic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(10, 10, 10)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(50, 50, 50))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pic, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 100, Short.MAX_VALUE)
-                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 100, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-    }// </editor-fold>//GEN-END:initComponents
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private com.nafiz.swing.PictureBox pic;
-    private com.nafiz.swing.PanelSlide slide;
-    // End of variables declaration//GEN-END:variables
+        @Override
+        protected void paintComponent(Graphics graphics) {
+            super.paintComponent(graphics);
+            Graphics2D g2 = (Graphics2D) graphics.create();
+            int width = getWidth();
+            int height = getHeight();
+            double scale = Math.max((double) width / background.getWidth(null),
+                    (double) height / background.getHeight(null));
+            int imageWidth = (int) Math.ceil(background.getWidth(null) * scale);
+            int imageHeight = (int) Math.ceil(background.getHeight(null) * scale);
+            int x = (width - imageWidth) / 2;
+            int y = (height - imageHeight) / 2;
+            g2.drawImage(background, x, y, imageWidth, imageHeight, this);
+            g2.setColor(new Color(0, 10, 18, 70));
+            g2.fillRect(0, 0, width, height);
+            g2.dispose();
+        }
+    }
 }

@@ -1,0 +1,13 @@
+/build/
+/bin/
+/out/
+/dist/
+server/target/
+server/.env
+/.idea/workspace.xml
+/.idea/dataSources/
+/nbproject/private/
+*.class
+hs_err_pid*
+.DS_Store
+Thumbs.db

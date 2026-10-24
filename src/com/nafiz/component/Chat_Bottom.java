@@ -10,15 +10,16 @@ import com.nafiz.swing.ScrollBar;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import javax.swing.ImageIcon;
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -40,12 +41,38 @@ public class Chat_Bottom extends javax.swing.JPanel {
         JScrollPane scroll = new JScrollPane();
         scroll.setBorder(null);
         JIMSendTextPane txt = new JIMSendTextPane();
-        txt.addKeyListener(new KeyAdapter() {
+        JButton cmd = new JButton();
+        txt.getDocument().addDocumentListener(new DocumentListener() {
             @Override
-            public void keyTyped(KeyEvent ke) {
+            public void insertUpdate(DocumentEvent event) {
                 refresh();
             }
-            
+
+            @Override
+            public void removeUpdate(DocumentEvent event) {
+                refresh();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent event) {
+                refresh();
+            }
+        });
+        txt.getInputMap(JComponent.WHEN_FOCUSED).put(
+                KeyStroke.getKeyStroke("ENTER"), "send-message");
+        txt.getActionMap().put("send-message", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent event) {
+                cmd.doClick();
+            }
+        });
+        txt.getInputMap(JComponent.WHEN_FOCUSED).put(
+                KeyStroke.getKeyStroke("shift ENTER"), "insert-newline");
+        txt.getActionMap().put("insert-newline", new AbstractAction() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent event) {
+                insertNewline(txt);
+            }
         });
         txt.setBorder(new EmptyBorder(5, 5, 5, 5));
         txt.setHintText("Write Message Here ...");
@@ -61,27 +88,40 @@ public class Chat_Bottom extends javax.swing.JPanel {
         panel.setPreferredSize(new Dimension(30, 28));
         panel.setBackground(Color.WHITE);
         
-        JButton cmd = new JButton();
         cmd.setBorder(null);
         cmd.setContentAreaFilled(false);
         cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
         cmd.setIcon(new ImageIcon(getClass().getResource("/com/nafiz/icon/send.png")));  //Send button Image added
-        cmd.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                String text = txt.getText().trim();
-                if (!text.equals("")) {
-                    PublicEvent.getInstance().getEventChat().sendMessage(text);
-                    txt.setText("");
-                    txt.grabFocus();
-                    refresh();
-                } else {
-                    txt.grabFocus();
-                }
-            }
+        cmd.addActionListener(event -> {
+            sendMessage(txt);
         });
         panel.add(cmd);
         add(panel);
+    }
+
+    private void sendMessage(JIMSendTextPane txt) {
+        String text = txt.getText().trim();
+        if (!text.isEmpty()) {
+            if (PublicEvent.getInstance().getEventChat() != null) {
+                PublicEvent.getInstance().getEventChat().sendMessage(text);
+            }
+            txt.setText("");
+        }
+        txt.grabFocus();
+        refresh();
+    }
+
+    private void insertNewline(JIMSendTextPane txt) {
+        int position = txt.getCaretPosition();
+        try {
+            txt.getDocument().insertString(position, "\n", null);
+            int newPosition = Math.min(position + 1, txt.getDocument().getLength());
+            txt.setCaretPosition(newPosition);
+        } catch (javax.swing.text.BadLocationException exception) {
+            throw new IllegalStateException("Unable to insert a new line.", exception);
+        }
+        txt.revalidate();
+        txt.repaint();
     }
     
     private void refresh() {

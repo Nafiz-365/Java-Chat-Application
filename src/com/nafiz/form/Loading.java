@@ -4,9 +4,7 @@
  */
 package com.nafiz.form;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.Font;
 
 /**
  *
@@ -32,9 +30,11 @@ public class Loading extends javax.swing.JComponent {
 
         lb = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(0, 0, 0));
-
-        lb.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/waiting.gif"))); // NOI18N
+        setBackground(new java.awt.Color(15, 23, 42));
+        lb.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lb.setForeground(java.awt.Color.WHITE);
+        lb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lb.setText("Signing you in...");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -53,14 +53,6 @@ public class Loading extends javax.swing.JComponent {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    @Override
-    protected void paintComponent(Graphics grphcs) {
-        Graphics2D g2 = (Graphics2D) grphcs;
-        g2.setColor(new Color(255, 255, 255, 200));
-        g2.fillRect(0, 0, getWidth(), getHeight());
-        super.paintComponent(grphcs);
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lb;

@@ -7,6 +7,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="flatlaf-1.2" level="project" />
+    <orderEntry type="library" name="flatlaf-intellij-themes-1.2" level="project" />
     <orderEntry type="library" name="miglayout-4.0" level="project" />
   </component>
 </module>
