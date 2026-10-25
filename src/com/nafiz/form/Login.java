@@ -143,20 +143,22 @@ public class Login extends javax.swing.JPanel {
         page.setLayout(new GridBagLayout());
 
         RoundedPanel card = new RoundedPanel(new BorderLayout(0, 10), 28);
-        card.setBackground(new Color(255, 255, 255, 246));
+        // Frosted glass: white at ~18% opacity for translucent look over background image
+        card.setBackground(new Color(255, 255, 255, 46));
+        card.setGlassy(true);
         card.setBorder(javax.swing.BorderFactory.createEmptyBorder(28, 32, 28, 32));
         card.setPreferredSize(new Dimension(400, 490));
 
         JPanel heading = new JPanel(new BorderLayout(0, 4));
         heading.setOpaque(false);
         JLabel brand = new JLabel("FURY CHAT");
-        brand.setForeground(UiTheme.PRIMARY);
+        brand.setForeground(new Color(180, 210, 255));
         brand.setFont(UiTheme.font(Font.BOLD, 12));
         JLabel title = new JLabel("Messages that stay with you");
-        title.setForeground(UiTheme.TEXT);
+        title.setForeground(Color.WHITE);
         title.setFont(UiTheme.font(Font.BOLD, 22));
         JLabel subtitle = new JLabel("Sign in or create a local account to begin.");
-        subtitle.setForeground(UiTheme.MUTED);
+        subtitle.setForeground(new Color(220, 228, 240));
         subtitle.setFont(UiTheme.font(Font.PLAIN, 13));
         heading.add(brand, BorderLayout.NORTH);
         heading.add(title, BorderLayout.CENTER);
@@ -209,9 +211,9 @@ public class Login extends javax.swing.JPanel {
 
         private BackgroundPanel() {
             setOpaque(true);
-            java.net.URL resource = Login.class.getResource("/com/nafiz/icon/auth-background.png");
+            java.net.URL resource = Login.class.getResource("/com/nafiz/icon/chat-login-background.png");
             if (resource == null) {
-                resource = Login.class.getResource("/com/nafiz/icon/chat-login-background.png");
+                resource = Login.class.getResource("/com/nafiz/icon/auth-background.png");
             }
             if (resource != null) {
                 background = new ImageIcon(resource).getImage();

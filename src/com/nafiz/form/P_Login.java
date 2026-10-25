@@ -67,11 +67,11 @@ public class P_Login extends javax.swing.JPanel {
         txtPass.setEchoChar('\u2022');
 
         lbTitle.setFont(UiTheme.font(java.awt.Font.BOLD, 18));
-        lbTitle.setForeground(UiTheme.TEXT);
+        lbTitle.setForeground(java.awt.Color.WHITE);
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbTitle.setText("Sign in");
 
-        jLabel1.setForeground(UiTheme.LABEL);
+        jLabel1.setForeground(new java.awt.Color(200, 215, 240));
         jLabel1.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel1.setText("Username");
 
@@ -81,7 +81,7 @@ public class P_Login extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setForeground(UiTheme.LABEL);
+        jLabel2.setForeground(new java.awt.Color(200, 215, 240));
         jLabel2.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel2.setText("Password");
 
@@ -101,11 +101,15 @@ public class P_Login extends javax.swing.JPanel {
 
         cmdRegister.setText("Don't have an account? Create one");
         UiTheme.styleLinkButton(cmdRegister);
+        cmdRegister.setForeground(new java.awt.Color(180, 210, 255));
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdRegisterActionPerformed(evt);
             }
         });
+
+        rememberMe.setForeground(new java.awt.Color(210, 225, 250));
+        showPassword.setForeground(new java.awt.Color(210, 225, 250));
 
         setLayout(new java.awt.GridBagLayout());
         java.awt.GridBagConstraints constraints = new java.awt.GridBagConstraints();

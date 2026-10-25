@@ -45,6 +45,10 @@ public class Chat_Right extends javax.swing.JLayeredPane {
         txt.setFile(fileName, fileSize);
     }
 
+    public void setRawContent(String rawContent) {
+        txt.setRawContent(rawContent);
+    }
+
     public void setTime() {
         setTime(Instant.now());
     }

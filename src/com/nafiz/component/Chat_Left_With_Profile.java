@@ -51,6 +51,10 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
         txt.setFile(fileName, fileSize);
     }
 
+    public void setRawContent(String rawContent) {
+        txt.setRawContent(rawContent);
+    }
+
     public void setTime() {
         txt.setTime(java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
                 .withZone(java.time.ZoneId.systemDefault()).format(java.time.Instant.now()));

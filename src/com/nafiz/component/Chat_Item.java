@@ -36,6 +36,80 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setBackground(new Color(0, 0, 0, 0));
         txt.setOpaque(false);
         txt.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
+        initContextMenu();
+    }
+
+    private String rawContent;
+
+    public void setRawContent(String rawContent) {
+        this.rawContent = rawContent;
+    }
+
+    public String getRawContent() {
+        if (rawContent != null && !rawContent.isEmpty()) {
+            return rawContent;
+        }
+        return txt != null ? txt.getText() : "";
+    }
+
+    private void initContextMenu() {
+        attachContextMenuRecursively(this);
+        if (txt != null) {
+            attachContextMenuRecursively(txt);
+        }
+    }
+
+    public void showContextMenu(java.awt.Component source, int x, int y) {
+        String copyText = (txt != null && txt.isVisible() && !txt.getText().isEmpty()) 
+                ? txt.getText() : (rawContent != null ? rawContent : "");
+        com.nafiz.swing.MessageContextMenu menu = new com.nafiz.swing.MessageContextMenu(
+                copyText,
+                () -> deleteMessage()
+        );
+        menu.show(source, x, y);
+    }
+
+    public void attachContextMenuRecursively(java.awt.Component comp) {
+        if (comp == null) return;
+        comp.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger()) showContextMenu(e.getComponent(), e.getX(), e.getY());
+            }
+
+            @Override
+            public void mouseReleased(java.awt.event.MouseEvent e) {
+                if (e.isPopupTrigger() || javax.swing.SwingUtilities.isRightMouseButton(e)) {
+                    showContextMenu(e.getComponent(), e.getX(), e.getY());
+                }
+            }
+        });
+        if (comp instanceof java.awt.Container) {
+            for (java.awt.Component child : ((java.awt.Container) comp).getComponents()) {
+                attachContextMenuRecursively(child);
+            }
+        }
+    }
+
+    private void deleteMessage() {
+        String contentToDelete = getRawContent();
+        if (contentToDelete != null && !contentToDelete.isEmpty()) {
+            new com.nafiz.chat.LocalConversationService().deleteMessage(contentToDelete);
+        }
+
+        java.awt.Component current = this;
+        while (current != null) {
+            java.awt.Container parent = current.getParent();
+            if (parent != null && (current instanceof com.nafiz.component.Chat_Right
+                    || current instanceof com.nafiz.component.Chat_Left_With_Profile
+                    || current instanceof com.nafiz.component.Chat_Left)) {
+                parent.remove(current);
+                parent.revalidate();
+                parent.repaint();
+                return;
+            }
+            current = parent;
+        }
     }
 
     public void setUserProfile(String user) {
@@ -51,10 +125,12 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         cmd.setFont(new java.awt.Font("Segoe UI", 1, 13));
         txt.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
         layer.add(cmd);
+        attachContextMenuRecursively(layer);
         add(layer, 0);
     }
 
     public void setText(String text) {
+        this.rawContent = text;
         txt.setText(text);
     }
 
@@ -77,6 +153,7 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         label.setForeground(timeColor);
         label.setHorizontalTextPosition(JLabel.LEFT);
         layer.add(label);
+        attachContextMenuRecursively(layer);
         add(layer);
 
     }
@@ -89,6 +166,7 @@ public class Chat_Item extends javax.swing.JLayeredPane {
             Chat_Image chatImage = new Chat_Image(right);
             chatImage.addImage(image);
             layer.add(chatImage);
+            attachContextMenuRecursively(layer);
             add(layer);
         }
     }
@@ -100,16 +178,21 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         Chat_Image chatImage = new Chat_Image(right);
         chatImage.addImage(image);
         layer.add(chatImage);
+        attachContextMenuRecursively(layer);
         add(layer);
     }
 
     public void setFile(String fileName, String fileSize) {
+        this.rawContent = "[FILE:" + fileName + "|" + fileSize + "]";
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.LEFT));
         layer.setBorder(new EmptyBorder(0, 5, 0, 5));
         Chat_File chatFile = new Chat_File();
         chatFile.setFile(fileName, fileSize);
+        boolean isOutgoing = UiTheme.BUBBLE_OUT.equals(getBackground());
+        chatFile.applyBubbleStyle(isOutgoing);
         layer.add(chatFile);
+        attachContextMenuRecursively(layer);
         add(layer);
     }
 

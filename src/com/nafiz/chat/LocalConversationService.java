@@ -27,6 +27,27 @@ public final class LocalConversationService {
         return List.copyOf(read(conversationId));
     }
 
+    public synchronized void deleteMessage(String content) {
+        if (content == null || content.isEmpty()) {
+            return;
+        }
+        try {
+            for (String key : storage.keys()) {
+                if (key.startsWith(MESSAGE_PREFIX)) {
+                    String conversationId = key.substring(MESSAGE_PREFIX.length());
+                    List<ChatMessage> messages = new ArrayList<>(read(conversationId));
+                    boolean changed = messages.removeIf(m -> m.content().equals(content)
+                            || m.content().contains(content)
+                            || content.contains(m.content()));
+                    if (changed) {
+                        write(conversationId, messages);
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+    }
+
     private List<ChatMessage> read(String conversationId) {
         String raw = storage.get(MESSAGE_PREFIX + conversationId, "");
         List<ChatMessage> messages = new ArrayList<>();

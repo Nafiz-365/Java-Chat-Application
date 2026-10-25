@@ -39,7 +39,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
     }
     
     private void init() {
-        setLayout(new MigLayout("fillx, insets 10 12 10 12", "[shrink 0]6[grow, fill]6[shrink 0]", "[fill]"));
+        setLayout(new MigLayout("fillx, insets 10 12 10 12", "[shrink 0]4[shrink 0]8[grow, fill]8[shrink 0]", "[fill]"));
         JScrollPane scroll = new JScrollPane();
         scroll.setBorder(null);
         scroll.setOpaque(false);
@@ -69,13 +69,16 @@ public class Chat_Bottom extends javax.swing.JPanel {
         });
         cmdAttach.addActionListener(e -> {
             javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
-            chooser.setDialogTitle("Select file to attach");
+            chooser.setDialogTitle("Select image or document to send");
             int res = chooser.showOpenDialog(Chat_Bottom.this);
             if (res == javax.swing.JFileChooser.APPROVE_OPTION) {
                 java.io.File file = chooser.getSelectedFile();
                 if (file != null && file.exists()) {
+                    String name = file.getName().toLowerCase();
                     long sizeKb = Math.max(1, file.length() / 1024);
-                    String msg = "[Attached: " + file.getName() + " (" + sizeKb + " KB)]";
+                    String sizeStr = sizeKb >= 1024 ? String.format("%.1f MB", sizeKb / 1024.0) : sizeKb + " KB";
+                    boolean isImg = name.endsWith(".png") || name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".gif");
+                    String msg = isImg ? "[IMG:" + file.getAbsolutePath() + "]" : "[FILE:" + file.getName() + "|" + sizeStr + "]";
                     if (PublicEvent.getInstance().getEventChat() != null) {
                         PublicEvent.getInstance().getEventChat().sendMessage(msg);
                     }
@@ -127,7 +130,40 @@ public class Chat_Bottom extends javax.swing.JPanel {
         });
         cmd.addActionListener(event -> sendMessage(txt));
 
+        // ── Emoji button ──────────────────────────────────────────────────
+        JButton cmdEmoji = new JButton();
+        cmdEmoji.setIcon(com.nafiz.swing.ModernIcons.emoji(UiTheme.MUTED, 20));
+        cmdEmoji.setContentAreaFilled(false);
+        cmdEmoji.setFocusPainted(false);
+        cmdEmoji.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 6, 6, 6));
+        cmdEmoji.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cmdEmoji.setToolTipText("Add emoji");
+        cmdEmoji.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) {
+                cmdEmoji.setIcon(com.nafiz.swing.ModernIcons.emoji(UiTheme.PRIMARY, 20));
+            }
+            @Override public void mouseExited(java.awt.event.MouseEvent e) {
+                cmdEmoji.setIcon(com.nafiz.swing.ModernIcons.emoji(UiTheme.MUTED, 20));
+            }
+        });
+
+        com.nafiz.swing.EmojiPopup emojiPopup = new com.nafiz.swing.EmojiPopup(emoji -> {
+            int pos = txt.getCaretPosition();
+            try {
+                txt.getDocument().insertString(pos, emoji, null);
+                txt.setCaretPosition(pos + emoji.length());
+            } catch (Exception ex) {
+                txt.setText(txt.getText() + emoji);
+            }
+            txt.grabFocus();
+        });
+
+        cmdEmoji.addActionListener(e -> {
+            emojiPopup.show(cmdEmoji, 0, -emojiPopup.getPreferredSize().height - 4);
+        });
+
         add(cmdAttach);
+        add(cmdEmoji);
         add(composer, "growx");
         JPanel sendWrap = new JPanel(new MigLayout("filly", "0[]0", "0[bottom]0"));
         sendWrap.setOpaque(false);

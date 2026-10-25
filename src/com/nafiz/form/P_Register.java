@@ -64,7 +64,7 @@ public class P_Register extends javax.swing.JPanel {
         txtRePassword.setEchoChar('\u2022');
         showPassword.setText("Show password");
         showPassword.setOpaque(false);
-        showPassword.setForeground(UiTheme.LABEL);
+        showPassword.setForeground(new java.awt.Color(210, 225, 250));
         showPassword.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         showPassword.addActionListener(evt -> {
             char echo = showPassword.isSelected() ? (char) 0 : '\u2022';
@@ -73,11 +73,11 @@ public class P_Register extends javax.swing.JPanel {
         });
 
         lbTitle.setFont(UiTheme.font(java.awt.Font.BOLD, 18));
-        lbTitle.setForeground(UiTheme.TEXT);
+        lbTitle.setForeground(java.awt.Color.WHITE);
         lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         lbTitle.setText("Create account");
 
-        jLabel1.setForeground(UiTheme.LABEL);
+        jLabel1.setForeground(new java.awt.Color(200, 215, 240));
         jLabel1.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel1.setText("Username");
 
@@ -87,7 +87,7 @@ public class P_Register extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setForeground(UiTheme.LABEL);
+        jLabel2.setForeground(new java.awt.Color(200, 215, 240));
         jLabel2.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel2.setText("Password");
 
@@ -107,13 +107,14 @@ public class P_Register extends javax.swing.JPanel {
 
         cmdBackLogin.setText("Already have an account? Sign in");
         UiTheme.styleLinkButton(cmdBackLogin);
+        cmdBackLogin.setForeground(new java.awt.Color(180, 210, 255));
         cmdBackLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdBackLoginActionPerformed(evt);
             }
         });
 
-        jLabel3.setForeground(UiTheme.LABEL);
+        jLabel3.setForeground(new java.awt.Color(200, 215, 240));
         jLabel3.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel3.setText("Confirm password");
 

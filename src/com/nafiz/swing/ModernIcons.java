@@ -285,9 +285,36 @@ public final class ModernIcons {
         return new VectorIcon(size, size, (g2, w, h) -> {
             g2.setColor(color);
             g2.setStroke(new BasicStroke(size * 0.10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            float cx = w * 0.55f, cy = h * 0.45f, rx = w * 0.22f, ry = h * 0.28f;
-            g2.draw(new Arc2D.Float(cx - rx, cy - ry, rx * 2, ry * 2, 45, 270, Arc2D.OPEN));
-            g2.drawLine((int) (cx - rx * 0.70f), (int) (cy + ry * 0.70f), (int) (w * 0.22f), (int) (h * 0.80f));
+            // Rotate 45 degrees around center to give realistic WhatsApp/Telegram diagonal clip
+            double cx = w * 0.5;
+            double cy = h * 0.5;
+            g2.rotate(Math.toRadians(45), cx, cy);
+
+            float wHalf = size * 0.20f;
+            float topY = (float) (cy - size * 0.34f);
+            float botY = (float) (cy + size * 0.32f);
+            float innerTopY = (float) (cy - size * 0.20f);
+            float innerBotY = (float) (cy + size * 0.20f);
+            float leftX = (float) (cx - wHalf);
+            float rightX = (float) (cx + wHalf);
+            float innerLeftX = (float) (cx - wHalf * 0.45f);
+
+            Path2D clip = new Path2D.Float();
+            // Start from inner tip
+            clip.moveTo(innerLeftX, topY + size * 0.12f);
+            clip.lineTo(innerLeftX, innerBotY);
+            // Inner bottom curve
+            clip.quadTo(cx, botY - size * 0.05f, rightX, innerBotY);
+            // Outer right straight up
+            clip.lineTo(rightX, topY + size * 0.15f);
+            // Outer top curve
+            clip.quadTo(cx, topY - size * 0.05f, leftX, topY + size * 0.15f);
+            // Outer left straight down
+            clip.lineTo(leftX, botY - size * 0.12f);
+            // Outer bottom curve
+            clip.quadTo(cx, botY + size * 0.08f, rightX - size * 0.05f, botY - size * 0.12f);
+
+            g2.draw(clip);
         });
     }
 
@@ -329,6 +356,67 @@ public final class ModernIcons {
             p.lineTo(w * 0.35f, h * 0.50f);
             p.lineTo(w * 0.65f, h * 0.76f);
             g2.draw(p);
+        });
+    }
+
+    // ─── Emoji / Smile ───────────────────────────────────────────────────────
+    public static Icon emoji(Color color, int size) {
+        return new VectorIcon(size, size, (g2, w, h) -> {
+            g2.setColor(color);
+            float pad = size * 0.12f;
+            g2.setStroke(new BasicStroke(size * 0.09f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            float d = w - pad * 2;
+            g2.draw(new Ellipse2D.Float(pad, pad, d, d));
+            // Eyes
+            float eyeR = size * 0.06f;
+            float ey = h * 0.38f;
+            g2.fill(new Ellipse2D.Float(w * 0.35f - eyeR, ey - eyeR, eyeR * 2, eyeR * 2));
+            g2.fill(new Ellipse2D.Float(w * 0.65f - eyeR, ey - eyeR, eyeR * 2, eyeR * 2));
+            // Smile curve
+            Path2D smile = new Path2D.Float();
+            smile.moveTo(w * 0.30f, h * 0.58f);
+            smile.curveTo(w * 0.38f, h * 0.76f, w * 0.62f, h * 0.76f, w * 0.70f, h * 0.58f);
+            g2.draw(smile);
+        });
+    }
+
+    // ─── Copy / Clipboard ────────────────────────────────────────────────────
+    public static Icon copy(Color color, int size) {
+        return new VectorIcon(size, size, (g2, w, h) -> {
+            g2.setColor(color);
+            float pad = size * 0.16f;
+            g2.setStroke(new BasicStroke(size * 0.09f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            float bw = w - pad * 2.2f;
+            float bh = h - pad * 2.2f;
+            // Back card
+            g2.draw(new RoundRectangle2D.Float(pad + size * 0.15f, pad, bw, bh, 4, 4));
+            // Front card
+            g2.setColor(Color.WHITE);
+            g2.fill(new RoundRectangle2D.Float(pad, pad + size * 0.15f, bw, bh, 4, 4));
+            g2.setColor(color);
+            g2.draw(new RoundRectangle2D.Float(pad, pad + size * 0.15f, bw, bh, 4, 4));
+        });
+    }
+
+    // ─── Trash / Delete ──────────────────────────────────────────────────────
+    public static Icon trash(Color color, int size) {
+        return new VectorIcon(size, size, (g2, w, h) -> {
+            g2.setColor(color);
+            float pad = size * 0.16f;
+            g2.setStroke(new BasicStroke(size * 0.09f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+            // Lid
+            g2.drawLine((int) (pad - size * 0.04f), (int) (pad + size * 0.14f), (int) (w - pad + size * 0.04f), (int) (pad + size * 0.14f));
+            g2.draw(new RoundRectangle2D.Float(w * 0.38f, pad, w * 0.24f, size * 0.14f, 2, 2));
+            // Can body
+            Path2D can = new Path2D.Float();
+            can.moveTo(pad + size * 0.06f, pad + size * 0.14f);
+            can.lineTo(pad + size * 0.10f, h - pad);
+            can.lineTo(w - pad - size * 0.10f, h - pad);
+            can.lineTo(w - pad - size * 0.06f, pad + size * 0.14f);
+            g2.draw(can);
+            // Inner vertical lines
+            g2.drawLine((int) (w * 0.42f), (int) (pad + size * 0.28f), (int) (w * 0.42f), (int) (h - pad - size * 0.12f));
+            g2.drawLine((int) (w * 0.58f), (int) (pad + size * 0.28f), (int) (w * 0.58f), (int) (h - pad - size * 0.12f));
         });
     }
 }

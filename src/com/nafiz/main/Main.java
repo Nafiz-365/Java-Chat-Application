@@ -30,6 +30,7 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void init() {
+        initWindow();
         ComponentResizer com = new ComponentResizer();
         com.registerComponent(this);
         Dimension minimumSize = new Dimension(500, 500);
@@ -42,6 +43,33 @@ public class Main extends javax.swing.JFrame {
         view_Image.setVisible(false);
         home.setVisible(false);
         initEvent();
+    }
+
+    private void initWindow() {
+        setTitle("Fury Chat");
+        try {
+            java.net.URL iconUrl = getClass().getResource("/com/nafiz/icon/icon.png");
+            if (iconUrl != null) {
+                java.awt.Image baseIcon = new javax.swing.ImageIcon(iconUrl).getImage();
+                java.util.List<java.awt.Image> icons = new java.util.ArrayList<>();
+                int[] sizes = {16, 20, 24, 32, 40, 48, 64, 128, 256};
+                for (int s : sizes) {
+                    java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(s, s, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                    java.awt.Graphics2D g2 = bi.createGraphics();
+                    g2.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                    g2.setRenderingHint(java.awt.RenderingHints.KEY_RENDERING, java.awt.RenderingHints.VALUE_RENDER_QUALITY);
+                    g2.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.drawImage(baseIcon, 0, 0, s, s, null);
+                    g2.dispose();
+                    icons.add(bi);
+                }
+                icons.add(baseIcon);
+                setIconImages(icons);
+                setIconImage(baseIcon);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initEvent() {
@@ -132,6 +160,7 @@ public class Main extends javax.swing.JFrame {
         home = new com.nafiz.form.Home();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Fury Chat");
         setUndecorated(true);
 
         border.setBackground(new java.awt.Color(15, 23, 42));
@@ -173,9 +202,17 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.JLabel appTitle = new javax.swing.JLabel("FURY CHAT");
+        javax.swing.JLabel appTitle = new javax.swing.JLabel("  Fury Chat");
         appTitle.setForeground(new java.awt.Color(226, 232, 240));
         appTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+        try {
+            java.net.URL titleIconUrl = getClass().getResource("/com/nafiz/icon/icon.png");
+            if (titleIconUrl != null) {
+                java.awt.Image img = new javax.swing.ImageIcon(titleIconUrl).getImage();
+                appTitle.setIcon(new javax.swing.ImageIcon(img.getScaledInstance(18, 18, java.awt.Image.SCALE_SMOOTH)));
+            }
+        } catch (Exception ignored) {
+        }
         appTitle.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {

@@ -66,9 +66,31 @@ public class Chat_Body extends javax.swing.JPanel {
     }
 
     public void addItemLeft(ChatMessage message) {
+        String content = message.content();
+        if (content != null && content.startsWith("[IMG:") && content.endsWith("]")) {
+            String path = content.substring(5, content.length() - 1);
+            java.io.File file = new java.io.File(path);
+            if (file.exists()) {
+                javax.swing.ImageIcon icon = new javax.swing.ImageIcon(path);
+                addItemLeft("", message.sender(), content, icon);
+                return;
+            } else {
+                addItemFile("", message.sender(), content, file.getName(), "Image unavailable");
+                return;
+            }
+        } else if (content != null && content.startsWith("[FILE:") && content.endsWith("]")) {
+            String meta = content.substring(6, content.length() - 1);
+            String[] parts = meta.split("\\|", 2);
+            String fileName = parts[0];
+            String fileSize = parts.length > 1 ? parts[1] : "";
+            addItemFile("", message.sender(), content, fileName, fileSize);
+            return;
+        }
+
         removeEmptyState();
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(message.content());
+        item.setRawContent(message.content());
         item.setTime(message.createdAt());
         item.setUserProfile(message.sender());
         body.add(item, "wrap, w 100:: 72%");
@@ -78,14 +100,18 @@ public class Chat_Body extends javax.swing.JPanel {
     }
 
     public void addItemLeft(String text, String user, Icon... image) {
+        addItemLeft(text, user, text, image);
+    }
+
+    public void addItemLeft(String text, String user, String rawContent, Icon... image) {
         removeEmptyState();
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(text);
+        item.setRawContent(rawContent);
         item.setImage(image);
         item.setTime();
         item.setUserProfile(user);
         body.add(item, "wrap, w 100:: 72%");
-        //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
     }
@@ -98,42 +124,70 @@ public class Chat_Body extends javax.swing.JPanel {
         item.setTime();
         item.setUserProfile(user);
         body.add(item, "wrap, w 100:: 72%");
-        //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
     }
 
     public void addItemFile(String text, String user, String fileName, String fileSize) {
+        addItemFile(text, user, "[FILE:" + fileName + "|" + fileSize + "]", fileName, fileSize);
+    }
+
+    public void addItemFile(String text, String user, String rawContent, String fileName, String fileSize) {
         removeEmptyState();
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
         item.setText(text);
+        item.setRawContent(rawContent);
         item.setFile(fileName, fileSize);
         item.setTime();
         item.setUserProfile(user);
         body.add(item, "wrap, w 100:: 72%");
-        //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
     }
 
     public void addItemRight(String text, Icon... image) {
+        addItemRight(text, text, image);
+    }
+
+    public void addItemRight(String text, String rawContent, Icon... image) {
         removeEmptyState();
         Chat_Right item = new Chat_Right();
         item.setText(text);
+        item.setRawContent(rawContent);
         item.setImage(image);
         body.add(item, "wrap, al right, w 100:: 72%");
-        //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
         item.setTime();
         scrollToBottom();
-
     }
 
     public void addItemRight(ChatMessage message) {
+        String content = message.content();
+        if (content != null && content.startsWith("[IMG:") && content.endsWith("]")) {
+            String path = content.substring(5, content.length() - 1);
+            java.io.File file = new java.io.File(path);
+            if (file.exists()) {
+                javax.swing.ImageIcon icon = new javax.swing.ImageIcon(path);
+                addItemRight("", content, icon);
+                return;
+            } else {
+                addItemFileRight("", content, file.getName(), "Image unavailable");
+                return;
+            }
+        } else if (content != null && content.startsWith("[FILE:") && content.endsWith("]")) {
+            String meta = content.substring(6, content.length() - 1);
+            String[] parts = meta.split("\\|", 2);
+            String fileName = parts[0];
+            String fileSize = parts.length > 1 ? parts[1] : "";
+            addItemFileRight("", content, fileName, fileSize);
+            return;
+        }
+
         removeEmptyState();
         Chat_Right item = new Chat_Right();
         item.setText(message.content());
+        item.setRawContent(message.content());
         item.setTime(message.createdAt());
         body.add(item, "wrap, al right, w 100:: 72%");
         body.repaint();
@@ -142,15 +196,18 @@ public class Chat_Body extends javax.swing.JPanel {
     }
 
     public void addItemFileRight(String text, String fileName, String fileSize) {
+        addItemFileRight(text, "[FILE:" + fileName + "|" + fileSize + "]", fileName, fileSize);
+    }
+
+    public void addItemFileRight(String text, String rawContent, String fileName, String fileSize) {
         removeEmptyState();
         Chat_Right item = new Chat_Right();
         item.setText(text);
+        item.setRawContent(rawContent);
         item.setFile(fileName, fileSize);
         body.add(item, "wrap, al right, w 100:: 72%");
-        //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
-
     }
 
     public void addDate(String date) {
