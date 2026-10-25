@@ -5,8 +5,8 @@
   # ⚡ Fury Chat
   ### *A State-of-the-Art, Glassmorphic Desktop Chat Client Built with Java Swing*
 
-  [![Java](https://img.shields.io/badge/Java-21%2B%20%2F%2024-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
-  [![UI Theme](https://img.shields.io/badge/UI-FlatLaf%201.2%20IntelliJ-0ea5e9?style=for-the-badge)](https://www.formdev.com/flatlaf/)
+  [![Java](https://img.shields.io/badge/Java-JDK%2024-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://www.oracle.com/java/)
+  [![UI Theme](https://img.shields.io/badge/UI-FlatLaf%20Arc%20IntelliJ-0ea5e9?style=for-the-badge)](https://www.formdev.com/flatlaf/)
   [![Layout](https://img.shields.io/badge/Layout-MigLayout%204.0-6366f1?style=for-the-badge)](http://www.miglayout.com/)
   [![Security](https://img.shields.io/badge/Security-PBKDF2--SHA256%20%28120k%20iters%29-10b981?style=for-the-badge)](https://en.wikipedia.org/wiki/PBKDF2)
   [![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-f59e0b?style=for-the-badge)](https://github.com/Nafiz-365/Java-Chat-Application)
@@ -20,21 +20,17 @@
 
 ## 🎥 Demo / Screencast
 
-<details>
-  <summary>▶️ Watch Full Screen Recording</summary>
-
-  <p align="center">
-    <img src="src/com/nafiz/assets/Screen%20Recording%202026-10-25%20163849.gif" alt="Fury Chat Demo" width="720" />
-  </p>
-</details>
+<p align="center">
+  <img src="src/com/nafiz/assets/demo.gif" alt="Fury Chat Demo" width="720" />
+</p>
 
 ---
 
 ## 📑 Table of Contents
 
 - [🎥 Demo / Screencast](#-demo--screencast)
-- [Overview & Architecture](#-overview--architecture)
-- [Comprehensive Features Deep-Dive](#-comprehensive-features-deep-dive)
+- [🏛️ Overview & Architecture](#️-overview--architecture)
+- [🚀 Comprehensive Features Deep-Dive](#-comprehensive-features-deep-dive)
   - [1. Modern Glassmorphism & Frameless UI Engine](#1-modern-glassmorphism--frameless-ui-engine)
   - [2. Native OS & Taskbar Integration](#2-native-os--taskbar-integration)
   - [3. Military-Grade Local Authentication & Session Management](#3-military-grade-local-authentication--session-management)
@@ -43,29 +39,29 @@
   - [6. Smart Message Composer & Attachments](#6-smart-message-composer--attachments)
   - [7. Lightbox Image Viewer](#7-lightbox-image-viewer)
   - [8. Protocol & Network-Ready Transport Layer](#8-protocol--network-ready-transport-layer)
-- [Technology Stack & Dependencies](#-technology-stack--dependencies)
-- [Complete Package & File Breakdown](#-complete-package--file-breakdown)
-- [Getting Started & Installation](#-getting-started--installation)
+- [🛠️ Technology Stack & Dependencies](#️-technology-stack--dependencies)
+- [📂 Complete Package & File Breakdown](#-complete-package--file-breakdown)
+- [🏁 Getting Started & Installation](#-getting-started--installation)
   - [Prerequisites](#prerequisites)
-  - [Running Directly with Pre-built JAR](#1-running-directly-with-pre-built-jar)
-  - [Building from Source (Terminal / CLI)](#2-building-from-source-terminal--cli)
-  - [Building with Apache Ant](#3-building-with-apache-ant)
-  - [Importing into IDEs (IntelliJ / NetBeans / VS Code)](#4-importing-into-ides)
-- [Keyboard Shortcuts](#-keyboard-shortcuts)
-- [Roadmap & Future Milestones](#-roadmap--future-milestones)
-- [Author & Credits](#-author--credits)
+  - [1. Running Directly with Pre-built JAR](#1-running-directly-with-pre-built-jar)
+  - [2. Building from Source (Terminal / CLI)](#2-building-from-source-terminal--cli)
+  - [3. Building with Apache Ant](#3-building-with-apache-ant)
+  - [4. Importing into IDEs](#4-importing-into-ides)
+- [⌨️ Keyboard Shortcuts](#️-keyboard-shortcuts)
+- [🗺️ Roadmap & Future Milestones](#️-roadmap--future-milestones)
+- [👤 Author & Credits](#-author--credits)
 
 ---
 
 ## 🏛️ Overview & Architecture
 
-Fury Chat is engineered around a clean, decoupled **Event-Driven Architecture (EDA)** where UI controllers, state repositories, and presentation widgets communicate through a central singleton event dispatcher (`PublicEvent`). This ensures complete separation of concerns and facilitates seamless future network backend integration.
+Fury Chat is engineered around a clean, decoupled **Event-Driven Architecture (EDA)** where UI controllers, state repositories, and presentation widgets communicate through a central singleton event dispatcher (`PublicEvent`). This ensures complete separation of concerns and facilitates seamless future network backend integration. The desktop client is intentionally **offline-first**: authentication and conversation services run entirely locally with no backend dependency.
 
 ### System Architecture Diagram
 
 ```mermaid
 graph TD
-    subgraph Presentation ["🎨 Presentation Layer (Swing + FlatLaf + MigLayout)"]
+    subgraph Presentation ["🎨 Presentation Layer (Swing + FlatLaf Arc IJ + MigLayout)"]
         Main["Main JFrame (Frameless, Resizable)"]
         TitleBar["Custom Slate Title Bar (#0F172A)"]
         Body["Layered Pane Container"]
@@ -138,21 +134,21 @@ graph TD
 ## 🚀 Comprehensive Features Deep-Dive
 
 ### 1. Modern Glassmorphism & Frameless UI Engine
-- **Multi-Layered Glass Rendering (`RoundedPanel`)**: Custom Java2D painting engine generating **6 distinct layers**:
-  1. *Translucent Base*: 30-alpha deep backing fill creating optical depth.
-  2. *Secondary Gradient Fill*: 18% opacity gradient tint reflecting the ambient dark background.
-  3. *Specular Top Shimmer*: Gradient highlight across the top 40% of the panel to simulate light reflection on polished glass.
-  4. *Glossy Outer Border*: Semi-transparent high-contrast border simulating a frosted beveled glass edge.
-  5. *Accent Border Shimmer*: Subdued edge highlight accentuating curves.
-  6. *Radial Vignette*: Edge darkening preventing glare over bright image backdrops.
-- **Frameless Window Chrome**: `setUndecorated(true)` window styled with an ultra-dark slate title bar (`#0F172A`).
-- **Smooth Window Dragging**: Custom mouse listener allowing the window to be dragged smoothly across displays.
+- **Multi-Layered Glass Rendering (`RoundedPanel`)**: Custom Java2D painting engine generating **6 distinct layers** when `glassy` mode is active:
+  1. *Translucent Base*: 30-alpha white fill creating optical depth behind the panel background.
+  2. *Background Body Fill*: Solid background color paint providing the frosted-glass body.
+  3. *Top Shimmer Gradient*: 90→8 alpha white gradient across the top ~45% of the panel to simulate light reflection on polished glass.
+  4. *Bottom Inner Glow*: 0→22 alpha white gradient along the bottom half for a subtle upward luminance.
+  5. *Left Specular Highlight Strip*: Horizontal 55→0 alpha gradient across the left 8% of width, simulating a direct-light specular edge.
+  6. *Glassy Border*: 110-alpha outer border + 35-alpha 1px inner border, replicating a frosted beveled glass edge.
+- **Frameless Window Chrome**: `setUndecorated(true)` window styled with an ultra-dark slate title bar (`#0F172A` / RGB 15, 23, 42).
+- **Smooth Window Dragging**: Custom `MouseMotionListener` on the title bar allowing the window to be dragged smoothly across displays.
 - **Double-Click Title Bar Action**: Double-clicking the title bar toggles between maximized and normal window states.
 - **Custom-Engineered Window Controls**:
   - Minimize (`−`): Minimizes smoothly to system taskbar via `setState(JFrame.ICONIFIED)`.
-  - Maximize/Restore (`□` / `❐`): Intelligently detects window state, restores boundaries or maximizes to primary screen, toggling button glyphs.
-  - Close (`×`): Styled with animated crimson hover highlights (`#DC2626`), triggers clean authentication cancellation, session destruction, and memory cleanup before terminating.
-- **Multi-Directional Window Resizing (`ComponentResizer`)**: Custom edge-hit detection enabling pixel-perfect resizing from all 8 directions on frameless windows.
+  - Maximize/Restore (`□` / `❐`): Intelligently detects window state, restores or maximizes to fill the screen, toggling button glyphs.
+  - Close (`×`): Styled with animated crimson hover highlights (`#DC2626`), triggers authentication cancellation, chat disconnection, and `Session.clear()` before terminating via `System.exit(0)`.
+- **Multi-Directional Window Resizing (`ComponentResizer`)**: Custom edge-hit detection enabling pixel-perfect resizing from all 8 directions on frameless windows, with a minimum size of 500×500 and snap size of 10px.
 
 ---
 
@@ -171,13 +167,13 @@ graph TD
   - **256-bit Key Length**: Provides cryptographic security against offline dictionary and brute-force attacks.
   - **16-byte Cryptographic Salt**: Generated per-user via `SecureRandom` to prevent rainbow table attacks.
   - **Timing-Attack Resistance**: Evaluates password hashes using constant-time `MessageDigest.isEqual(...)`.
-  - **Memory-Safe Password Disposal**: Collects credentials as `char[]` arrays rather than immutable `String` objects, allowing instant memory zeroing.
+  - **Memory-Safe Password Disposal**: Collects credentials as `char[]` arrays; `PBEKeySpec.clearPassword()` is called in `finally` to zero credentials from heap memory immediately after hashing.
 - **OS-Level Persistence**: Backed by the Java `Preferences` API (`Preferences.userNodeForPackage`), saving account hashes securely in the OS user registry without requiring a database.
 - **Interactive UI Capabilities**:
   - **Sliding Panel Transitions (`SlidingPanel`)**: Fluid horizontal transitions between Login and Register cards.
   - **Password Visibility Toggler**: Interactive eye toggle button displaying or obscuring password characters.
   - **Remember Username**: Persists active username for swift subsequent logins.
-  - **Live Input Validation**: Regex verification for usernames (`3-32 characters; letters, numbers, '.', '_', '-'`).
+  - **Live Input Validation**: Regex verification for usernames (`3–32 characters; lowercase letters, numbers, '.', '_', '-'`).
   - **Session Lifecycle (`Session`)**: Singleton thread-safe session store caching the active username, automatically refreshed on sign-in and purged on logout.
 
 ---
@@ -251,8 +247,8 @@ The application includes a fully typed networking protocol in the `com.nafiz.pro
 
 | Technology | Version | Purpose |
 |---|---|---|
-| **Java Platform** | OpenJDK 21 / 24 | Core programming language, modern standard library |
-| **FlatLaf** | 1.2 | Modern, clean IntelliJ-based Look and Feel theme for Swing |
+| **Java Platform** | OpenJDK 24 | Core programming language, modern standard library |
+| **FlatLaf** | latest | Arc IntelliJ Look and Feel theme for Swing (`FlatArcIJTheme`) |
 | **MigLayout** | 4.0 (Swing) | Advanced, highly responsive grid/flow layout manager |
 | **Java AWT / Java2D** | Built-in | Custom rendering (Graphics2D anti-aliased glassmorphism, avatars) |
 | **Java Preferences API** | Built-in | Secure local credential and configuration persistence |
@@ -267,6 +263,9 @@ The application includes a fully typed networking protocol in the `com.nafiz.pro
 Java-Chat-Application/
 ├── src/
 │   └── com/nafiz/
+│       ├── assets/
+│       │   └── demo.gif                    # Lightweight 60fps looping demo screencast
+│       │
 │       ├── auth/
 │       │   ├── AuthService.java            # PBKDF2 hashing, user validation, registry persistence
 │       │   └── Session.java                # Thread-safe session memory store
@@ -314,7 +313,8 @@ Java-Chat-Application/
 │       ├── icon/
 │       │   ├── icon.png                    # Primary Night Fury app icon
 │       │   ├── chat-login-background.png   # Ambient dark gradient backdrop
-│       │   └── *.png                       # UI glyphs, action icons & ticks
+│       │   ├── login_image.png             # Login panel decorative image
+│       │   └── *.png / *.gif               # UI glyphs, action icons & ticks
 │       │
 │       ├── main/
 │       │   ├── Main.java                   # Entry point, frameless window setup, OS icons
@@ -326,17 +326,24 @@ Java-Chat-Application/
 │       │   └── ProtocolMessageType.java    # Transport message types
 │       │
 │       └── swing/
+│           ├── blurHash/                   # BlurHash image placeholder library
+│           │   ├── Base83.java             # Base-83 encoding for BlurHash
+│           │   ├── BlurHash.java           # BlurHash decode & encode implementation
+│           │   ├── SRGB.java               # sRGB gamma conversion utilities
+│           │   └── Util.java               # BlurHash math utilities
 │           ├── ComponentResizer.java       # Edge hit-testing borderless window resizer
 │           ├── EmojiPopup.java             # Tabbed emoji keyboard popup
 │           ├── HintTextField.java          # Input field with animated placeholder
 │           ├── ImageAvatar.java            # Circular avatar with anti-aliasing & border
 │           ├── InitialsAvatar.java         # Dynamic monogram avatar fallback
 │           ├── JIMSendTextPane.java        # Multi-line composer text pane (Enter/Shift+Enter)
+│           ├── Line.java                   # Horizontal divider line component
 │           ├── MessageContextMenu.java     # Right-click context menu (Copy, Delete)
 │           ├── ModernIcons.java            # Programmatic Java2D vector icon renderer
 │           ├── ModernScrollBarUI.java      # Slim dark scrollbar UI
 │           ├── PanelSlide.java             # Horizontal sliding animation engine
 │           ├── PictureBox.java             # Aspect-ratio preserving image box
+│           ├── Progress.java               # Typed progress bar (wraps ProgressCircleUI)
 │           ├── ProgressCircleUI.java       # Circular upload/download progress indicator
 │           ├── RoundedPanel.java           # 6-layer Glassmorphic rendering engine
 │           ├── ScrollBar.java              # Modern custom scrollbar container
@@ -344,9 +351,14 @@ Java-Chat-Application/
 │           └── UiTheme.java                # Centralized color tokens & typography
 │
 ├── lib/                                    # FlatLaf and MigLayout binary libraries
-├── dist/                                   # Packaged production executable JAR
+├── dist/                                   # Packaged production executable JAR (generated)
 ├── nbproject/                              # NetBeans IDE project metadata
 ├── build.xml                               # Apache Ant build script
+├── ARCHITECTURE.md                         # Architecture decisions & threading rules
+├── CHANGELOG.md                            # Feature history & changes
+├── DEVELOPMENT.md                          # Build instructions & Swing coding rules
+├── ROADMAP.md                              # Phased feature roadmap
+├── SECURITY.md                             # Security policy
 └── README.md                               # Project documentation
 ```
 
@@ -355,7 +367,7 @@ Java-Chat-Application/
 ## 🏁 Getting Started & Installation
 
 ### Prerequisites
-- **Java Development Kit (JDK)**: JDK 21 or JDK 24 installed and available on your system `PATH`.
+- **Java Development Kit (JDK)**: JDK 24 installed and available on your system `PATH`.
   ```bash
   java -version
   javac -version
@@ -384,6 +396,7 @@ javac -cp "lib/*" -d out/production/Java-Chat-Application (Get-ChildItem -Recurs
 
 # 2. Copy graphical assets and icons into output build
 Copy-Item -Path "src/com/nafiz/icon" -Destination "out/production/Java-Chat-Application/com/nafiz/" -Recurse -Force
+Copy-Item -Path "src/com/nafiz/assets" -Destination "out/production/Java-Chat-Application/com/nafiz/" -Recurse -Force
 
 # 3. Create the executable JAR
 jar -cfe dist/Java-Chat-Application.jar com.nafiz.main.Main -C out/production/Java-Chat-Application .
@@ -401,8 +414,8 @@ mkdir -p out/production/Java-Chat-Application
 javac -cp "lib/*" -d out/production/Java-Chat-Application $(find src -name "*.java")
 
 # 3. Copy resource assets
-mkdir -p out/production/Java-Chat-Application/com/nafiz/icon
-cp -r src/com/nafiz/icon/* out/production/Java-Chat-Application/com/nafiz/icon/
+cp -r src/com/nafiz/icon out/production/Java-Chat-Application/com/nafiz/
+cp -r src/com/nafiz/assets out/production/Java-Chat-Application/com/nafiz/
 
 # 4. Package JAR
 jar -cfe dist/Java-Chat-Application.jar com.nafiz.main.Main -C out/production/Java-Chat-Application .
@@ -426,7 +439,7 @@ java -jar dist/Java-Chat-Application.jar
 - **IntelliJ IDEA**:
   1. Open IntelliJ IDEA -> `File` -> `Open...` -> Select `Java-Chat-Application` directory.
   2. Go to `File` -> `Project Structure` -> `Libraries` -> Click `+` -> Add all JARs inside `lib/`.
-  3. Set Project SDK to **JDK 21** or **JDK 24**.
+  3. Set Project SDK to **JDK 24**.
   4. Run `com.nafiz.main.Main`.
 
 - **Apache NetBeans**:
