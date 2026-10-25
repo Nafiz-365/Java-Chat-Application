@@ -24,10 +24,7 @@
   <summary>▶️ Watch Full Screen Recording</summary>
 
   <p align="center">
-    <video controls controlsList="nodownload" loop width="720" poster="src/com/nafiz/icon/login_image.png" preload="none">
-      <source src="src/com/nafiz/assets/Screen%20Recording%202026-10-25%20163849.mp4" type="video/mp4" />
-      Your browser does not support the video tag.
-    </video>
+    <img src="src/com/nafiz/assets/Screen%20Recording%202026-10-25%20163849.gif" alt="Fury Chat Demo" width="720" />
   </p>
 </details>
 
