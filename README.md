@@ -18,10 +18,40 @@
 
 </div>
 
+## 🎥 Demo / Screencast
+
+<p align="center">
+  <a href="src/com/nafiz/assets/Screen%20Recording%202026-10-25%20163849.mp4">
+    <img src="src/com/nafiz/icon/login_image.png" alt="Fury Chat — Live Demo" width="720" />
+  </a>
+</p>
+
+<details>
+  <summary>▶️ Watch Full Screen Recording</summary>
+
+  <p align="center">
+    <video controls width="720" poster="src/com/nafiz/icon/login_image.png" preload="none">
+      <source src="src/com/nafiz/assets/Screen%20Recording%202026-10-25%20163849.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </p>
+
+  <p align="center">
+    <a href="src/com/nafiz/assets/Screen%20Recording%202026-10-25%20163849.mp4" download>
+      ⬇️ Download Full Demo Video (~200 MB)
+    </a>
+  </p>
+
+  <p align="center">
+    <em>Screen recording showcasing the glassmorphic UI, frameless window, login flow, chat stream, emoji picker, and lightbox image viewer in action.</em>
+  </p>
+</details>
+
 ---
 
 ## 📑 Table of Contents
 
+- [🎥 Demo / Screencast](#-demo--screencast)
 - [Overview & Architecture](#-overview--architecture)
 - [Comprehensive Features Deep-Dive](#-comprehensive-features-deep-dive)
   - [1. Modern Glassmorphism & Frameless UI Engine](#1-modern-glassmorphism--frameless-ui-engine)
