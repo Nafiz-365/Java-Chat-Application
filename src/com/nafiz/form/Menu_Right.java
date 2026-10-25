@@ -87,7 +87,7 @@ public class Menu_Right extends javax.swing.JPanel {
         JLabel heading = new JLabel("Your space");
         heading.setFont(UiTheme.font(Font.BOLD, 13));
         heading.setForeground(UiTheme.TEXT);
-        JLabel description = new JLabel("<html><div style='width:150px'>"
+        JLabel description = new JLabel("<html><div style='width:100%'>"
                 + "A calm place for notes, drafts, and conversations that stay on this computer."
                 + "</div></html>");
         description.setFont(UiTheme.font(Font.PLAIN, 12));

@@ -176,6 +176,19 @@ public class Main extends javax.swing.JFrame {
         javax.swing.JLabel appTitle = new javax.swing.JLabel("FURY CHAT");
         appTitle.setForeground(new java.awt.Color(226, 232, 240));
         appTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+        appTitle.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                titleMousePressed(evt);
+            }
+        });
+        appTitle.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                titleMouseDragged(evt);
+            }
+        });
+
         javax.swing.JPanel windowButtons = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 4, 4));
         windowButtons.setOpaque(false);
         windowButtons.add(cmdMinimize);

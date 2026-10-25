@@ -90,12 +90,15 @@ public class Chat_Title extends javax.swing.JPanel {
         lbName.setFont(UiTheme.font(Font.BOLD, 15));
         lbName.setForeground(UiTheme.TEXT);
         lbName.setText("Your conversation");
+        lbName.setMinimumSize(new Dimension(20, 18));
         layer.add(lbName);
 
         lbStatus.setFont(UiTheme.font(Font.PLAIN, 12));
         lbStatus.setForeground(UiTheme.MUTED);
         lbStatus.setText("Local workspace");
+        lbStatus.setMinimumSize(new Dimension(20, 14));
         layer.add(lbStatus);
+        layer.setMinimumSize(new Dimension(40, 32));
         add(layer, BorderLayout.CENTER);
 
         cmdDetails = new JButton("Details");
