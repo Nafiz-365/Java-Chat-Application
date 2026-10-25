@@ -32,7 +32,9 @@ public class Main extends javax.swing.JFrame {
     private void init() {
         ComponentResizer com = new ComponentResizer();
         com.registerComponent(this);
-        com.setMinimumSize(new Dimension(640, 480));
+        Dimension minimumSize = new Dimension(500, 500);
+        setMinimumSize(minimumSize);
+        com.setMinimumSize(minimumSize);
         com.setMaximumSize(Toolkit.getDefaultToolkit().getScreenSize());
         com.setSnapSize(new Dimension(10, 10));
         login.setVisible(true);
@@ -75,7 +77,33 @@ public class Main extends javax.swing.JFrame {
 
             @Override
             public void saveImage(Icon image) {
-                System.out.println("Save Image next update");
+                if (image == null) {
+                    return;
+                }
+                javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
+                chooser.setDialogTitle("Save Image");
+                chooser.setSelectedFile(new java.io.File("chat-image.png"));
+                chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("PNG Image (*.png)", "png"));
+                int userSelection = chooser.showSaveDialog(Main.this);
+                if (userSelection == javax.swing.JFileChooser.APPROVE_OPTION) {
+                    java.io.File fileToSave = chooser.getSelectedFile();
+                    if (!fileToSave.getName().toLowerCase().endsWith(".png")) {
+                        fileToSave = new java.io.File(fileToSave.getAbsolutePath() + ".png");
+                    }
+                    try {
+                        java.awt.image.BufferedImage bi = new java.awt.image.BufferedImage(
+                                image.getIconWidth(), image.getIconHeight(), java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                        java.awt.Graphics2D g2 = bi.createGraphics();
+                        image.paintIcon(null, g2, 0, 0);
+                        g2.dispose();
+                        javax.imageio.ImageIO.write(bi, "png", fileToSave);
+                        javax.swing.JOptionPane.showMessageDialog(Main.this,
+                                "Image saved successfully.", "Save Image", javax.swing.JOptionPane.INFORMATION_MESSAGE);
+                    } catch (Exception ex) {
+                        javax.swing.JOptionPane.showMessageDialog(Main.this,
+                                "Failed to save image: " + ex.getMessage(), "Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
             
         });
@@ -106,12 +134,12 @@ public class Main extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
 
-        border.setBackground(new java.awt.Color(30, 41, 59));
+        border.setBackground(new java.awt.Color(15, 23, 42));
 
         background.setBackground(new java.awt.Color(248, 250, 252));
         title.setBackground(new java.awt.Color(15, 23, 42));
 
-        title.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 12, 0, 8));
+        title.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 16, 0, 8));
         title.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 titleMouseDragged(evt);
@@ -145,27 +173,17 @@ public class Main extends javax.swing.JFrame {
             }
         });
 
-        javax.swing.GroupLayout titleLayout = new javax.swing.GroupLayout(title);
-        title.setLayout(titleLayout);
-        titleLayout.setHorizontalGroup(
-            titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, titleLayout.createSequentialGroup()
-                .addContainerGap(0, Short.MAX_VALUE)
-                .addComponent(cmdMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(cmdMaximize, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addComponent(cmdClose, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        titleLayout.setVerticalGroup(
-            titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(titleLayout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addGroup(titleLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmdMinimize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmdMaximize, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cmdClose, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-        );
+        javax.swing.JLabel appTitle = new javax.swing.JLabel("FURY CHAT");
+        appTitle.setForeground(new java.awt.Color(226, 232, 240));
+        appTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 13));
+        javax.swing.JPanel windowButtons = new javax.swing.JPanel(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 4, 4));
+        windowButtons.setOpaque(false);
+        windowButtons.add(cmdMinimize);
+        windowButtons.add(cmdMaximize);
+        windowButtons.add(cmdClose);
+        title.setLayout(new java.awt.BorderLayout());
+        title.add(appTitle, java.awt.BorderLayout.WEST);
+        title.add(windowButtons, java.awt.BorderLayout.EAST);
 
         body.setLayout(new java.awt.CardLayout());
         body.add(loading1, "card5");
@@ -179,18 +197,13 @@ public class Main extends javax.swing.JFrame {
         backgroundLayout.setHorizontalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, backgroundLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 986, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 998, Short.MAX_VALUE)
         );
         backgroundLayout.setVerticalGroup(
             backgroundLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(backgroundLayout.createSequentialGroup()
                 .addComponent(title, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 498, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(body, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout borderLayout = new javax.swing.GroupLayout(border);
@@ -267,10 +280,17 @@ public class Main extends javax.swing.JFrame {
     }
 
     private void titleMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleMouseDragged
+        if ((getExtendedState() & JFrame.MAXIMIZED_BOTH) == JFrame.MAXIMIZED_BOTH) {
+            return;
+        }
         this.setLocation(this.getLocation().x + evt.getX() - pX, this.getLocation().y + evt.getY() - pY);
     }//GEN-LAST:event_titleMouseDragged
 
     private void titleMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_titleMousePressed
+        if (evt.getClickCount() == 2 && javax.swing.SwingUtilities.isLeftMouseButton(evt)) {
+            cmdMaximizeActionPerformed(null);
+            return;
+        }
         pX = evt.getX();
         pY = evt.getY();
     }//GEN-LAST:event_titleMousePressed

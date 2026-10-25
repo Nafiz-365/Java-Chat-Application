@@ -14,17 +14,16 @@
 - Add an executor/threading policy for Swing.
 - Replace silent placeholders with explicit results.
 
-## 3. Authentication
+## 3. Local authentication
 
-- Add server repositories on top of the versioned database schema.
-- Register users with password hashing.
-- Implement login, token expiration, logout, and authorization.
-- Display connection and credential errors.
+- Keep local registration and login fast, clear, and safe.
+- Improve password feedback and session cleanup.
+- Display useful credential and validation errors.
 
-## 4. Real messaging
+## 4. Local messaging
 
 - Load contacts and conversations.
-- Send and receive messages through the server.
+- Send and receive messages through the local transport.
 - Add IDs, timestamps, acknowledgements, failures, retries, and history pagination.
 - Reconcile reconnects without duplicate messages.
 
@@ -34,8 +33,8 @@
 - Implement attachment upload/download with size and type limits.
 - Implement image saving and progress/error states.
 
-## 6. Production readiness
+## 6. Desktop readiness
 
-- Use TLS, secure session storage, rate limits, audit logging, and dependency scanning.
-- Add automated tests, packaging, and release documentation.
-- Test narrow, normal, maximized, high-DPI, offline, reconnect, and server-error scenarios.
+- Keep sensitive values out of preferences and logs.
+- Add packaging and release documentation.
+- Test narrow, normal, maximized, and high-DPI layouts.

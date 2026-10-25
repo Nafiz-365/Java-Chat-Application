@@ -4,6 +4,8 @@ import com.nafiz.auth.AuthService;
 import com.nafiz.auth.Session;
 import com.nafiz.event.EventLogin;
 import com.nafiz.event.PublicEvent;
+import com.nafiz.swing.RoundedPanel;
+import com.nafiz.swing.UiTheme;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Color;
@@ -15,7 +17,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.Insets;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -141,21 +142,25 @@ public class Login extends javax.swing.JPanel {
         JPanel page = new BackgroundPanel();
         page.setLayout(new GridBagLayout());
 
-        RoundedPanel card = new RoundedPanel(new BorderLayout(0, 12), 24);
-        card.setBackground(new Color(255, 255, 255, 242));
-        card.setBorder(javax.swing.BorderFactory.createEmptyBorder(30, 34, 34, 34));
-        card.setPreferredSize(new Dimension(400, 470));
+        RoundedPanel card = new RoundedPanel(new BorderLayout(0, 10), 28);
+        card.setBackground(new Color(255, 255, 255, 246));
+        card.setBorder(javax.swing.BorderFactory.createEmptyBorder(28, 32, 28, 32));
+        card.setPreferredSize(new Dimension(400, 490));
 
-        JPanel heading = new JPanel(new BorderLayout(0, 6));
+        JPanel heading = new JPanel(new BorderLayout(0, 4));
         heading.setOpaque(false);
         JLabel brand = new JLabel("FURY CHAT");
-        brand.setForeground(new Color(37, 99, 235));
-        brand.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        JLabel title = new JLabel("Connect with your people");
-        title.setForeground(new Color(15, 23, 42));
-        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        brand.setForeground(UiTheme.PRIMARY);
+        brand.setFont(UiTheme.font(Font.BOLD, 12));
+        JLabel title = new JLabel("Messages that stay with you");
+        title.setForeground(UiTheme.TEXT);
+        title.setFont(UiTheme.font(Font.BOLD, 22));
+        JLabel subtitle = new JLabel("Sign in or create a local account to begin.");
+        subtitle.setForeground(UiTheme.MUTED);
+        subtitle.setFont(UiTheme.font(Font.PLAIN, 13));
         heading.add(brand, BorderLayout.NORTH);
         heading.add(title, BorderLayout.CENTER);
+        heading.add(subtitle, BorderLayout.SOUTH);
         card.add(heading, BorderLayout.NORTH);
 
         forms.setOpaque(false);
@@ -174,7 +179,7 @@ public class Login extends javax.swing.JPanel {
             @Override
             public void componentResized(java.awt.event.ComponentEvent event) {
                 int width = Math.min(400, Math.max(320, page.getWidth() - 48));
-                int height = Math.min(470, Math.max(430, page.getHeight() - 48));
+                int height = Math.min(500, Math.max(440, page.getHeight() - 48));
                 card.setPreferredSize(new Dimension(width, height));
                 page.revalidate();
             }
@@ -199,34 +204,15 @@ public class Login extends javax.swing.JPanel {
         cards.show(forms, "login");
     }
 
-    private static final class RoundedPanel extends JPanel {
-        private final int arc;
-
-        private RoundedPanel(java.awt.LayoutManager layout, int arc) {
-            super(layout);
-            this.arc = arc;
-            setOpaque(false);
-        }
-
-        @Override
-        protected void paintComponent(Graphics graphics) {
-            Graphics2D g2 = (Graphics2D) graphics.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setColor(getBackground());
-            g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-            g2.setColor(new Color(203, 213, 225));
-            g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, arc, arc);
-            g2.dispose();
-            super.paintComponent(graphics);
-        }
-    }
-
     private static final class BackgroundPanel extends JPanel {
         private final Image background;
 
         private BackgroundPanel() {
             setOpaque(true);
-            java.net.URL resource = Login.class.getResource("/com/nafiz/icon/chat-login-background.png");
+            java.net.URL resource = Login.class.getResource("/com/nafiz/icon/auth-background.png");
+            if (resource == null) {
+                resource = Login.class.getResource("/com/nafiz/icon/chat-login-background.png");
+            }
             if (resource != null) {
                 background = new ImageIcon(resource).getImage();
             } else {
@@ -247,7 +233,7 @@ public class Login extends javax.swing.JPanel {
             int x = (width - imageWidth) / 2;
             int y = (height - imageHeight) / 2;
             g2.drawImage(background, x, y, imageWidth, imageHeight, this);
-            g2.setColor(new Color(0, 10, 18, 70));
+            g2.setColor(new Color(8, 15, 28, 88));
             g2.fillRect(0, 0, width, height);
             g2.dispose();
         }

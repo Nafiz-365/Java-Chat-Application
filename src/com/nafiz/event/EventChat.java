@@ -11,4 +11,6 @@ package com.nafiz.event;
 public interface EventChat {
 
     public void sendMessage(String text);
+
+    public void selectConversation(String name);
 }

@@ -4,11 +4,21 @@
  */
 package com.nafiz.form;
 
+import com.nafiz.swing.SlidingPanel;
+import com.nafiz.swing.UiTheme;
 import net.miginfocom.swing.MigLayout;
 
 public class Home extends javax.swing.JLayeredPane {
+    public static final int NARROW_BREAKPOINT = 700;
+    private static final int RIGHT_WIDTH = 280;
+
+    private Menu_Left menuLeft;
     private Menu_Right menuRight;
     private Chat chat;
+    private SlidingPanel rightSlider;
+    private boolean isNarrow = false;
+    private boolean inChatView = true;
+    private boolean showingDetailsInNarrow = false;
 
     public Home() {
         initComponents();
@@ -16,12 +26,128 @@ public class Home extends javax.swing.JLayeredPane {
     }
 
     private void init() {
-        setLayout(new MigLayout("fillx, filly", "0[200!]5[fill, 100%]5[200!]0", "0[fill]0"));
-        this.add(new Menu_Left());
+        setOpaque(true);
+        setBackground(UiTheme.SURFACE);
+
+        menuLeft = new Menu_Left();
         chat = new Chat();
-        this.add(chat);
         menuRight = new Menu_Right();
-        this.add(menuRight);
+        menuRight.setOnClose(this::closeRightMenu);
+
+        // Wrap right panel in SlidingPanel for smooth animation
+        rightSlider = new SlidingPanel(menuRight, RIGHT_WIDTH, false);
+
+        chat.setOnToggleDetails(this::toggleRightMenu);
+
+        chat.setOnConversationSelected(() -> {
+            if (isNarrow) {
+                inChatView = true;
+                showingDetailsInNarrow = false;
+                applyNarrowState();
+            }
+        });
+
+        chat.setOnBack(() -> {
+            if (isNarrow) {
+                inChatView = false;
+                showingDetailsInNarrow = false;
+                applyNarrowState();
+            }
+        });
+
+        // Initial setup
+        isNarrow = getWidth() > 0 && getWidth() < NARROW_BREAKPOINT;
+        applyLayoutConstraints();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                handleResize();
+            }
+        });
+    }
+
+    private void handleResize() {
+        int width = getWidth();
+        if (width <= 0) return;
+
+        boolean nowNarrow = width < NARROW_BREAKPOINT;
+        if (nowNarrow != isNarrow) {
+            isNarrow = nowNarrow;
+            applyLayoutConstraints();
+        }
+    }
+
+    private void applyLayoutConstraints() {
+        removeAll();
+        if (isNarrow) {
+            // Narrow mode (mobile single column): active panel fills 100% width with 0 empty gaps
+            setLayout(new MigLayout("fill, insets 0, hidemode 3", "0[grow, fill]0", "0[grow, fill]0"));
+            add(menuLeft, "cell 0 0, grow, push");
+            add(chat, "cell 0 0, grow, push");
+            add(rightSlider, "cell 0 0, grow, push");
+            rightSlider.setFullWidthMode(true);
+            applyNarrowState();
+        } else {
+            // Desktop mode (multi-column): sidebar 260px, chat fills remainder, rightSlider slides 0-280px
+            setLayout(new MigLayout("fill, insets 0, hidemode 3", "0[260!]0[grow, fill]0[]", "0[grow, fill]0"));
+            add(menuLeft, "cell 0 0, width 260!, growy");
+            add(chat, "cell 1 0, grow, push");
+            add(rightSlider, "cell 2 0, growy");
+            rightSlider.setFullWidthMode(false);
+            menuLeft.setVisible(true);
+            chat.setVisible(true);
+            chat.setBackVisible(false);
+            rightSlider.setVisible(true);
+            chat.setDetailsOpen(rightSlider.isOpen());
+            revalidate();
+            repaint();
+        }
+    }
+
+    private void applyNarrowState() {
+        if (!isNarrow) return;
+
+        if (showingDetailsInNarrow) {
+            menuLeft.setVisible(false);
+            chat.setVisible(false);
+            rightSlider.setVisible(true);
+            chat.setDetailsOpen(true);
+        } else if (inChatView) {
+            rightSlider.setVisible(false);
+            menuLeft.setVisible(false);
+            chat.setVisible(true);
+            chat.setBackVisible(true);
+            chat.setDetailsOpen(false);
+        } else {
+            rightSlider.setVisible(false);
+            chat.setVisible(false);
+            menuLeft.setVisible(true);
+            chat.setDetailsOpen(false);
+        }
+        revalidate();
+        repaint();
+    }
+
+    public void toggleRightMenu() {
+        if (isNarrow) {
+            showingDetailsInNarrow = !showingDetailsInNarrow;
+            applyNarrowState();
+        } else {
+            // Desktop: animate slide in/out
+            boolean nowOpen = rightSlider.toggle();
+            chat.setDetailsOpen(nowOpen);
+        }
+    }
+
+    public void closeRightMenu() {
+        if (isNarrow) {
+            showingDetailsInNarrow = false;
+            applyNarrowState();
+        } else {
+            rightSlider.slideClose();
+            chat.setDetailsOpen(false);
+        }
     }
 
     public void refreshSession(String username) {

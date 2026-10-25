@@ -1,7 +1,8 @@
 
 package com.nafiz.component;
 
-import java.awt.Color;
+import com.nafiz.swing.InitialsAvatar;
+import com.nafiz.swing.UiTheme;
 import javax.swing.Icon;
 
 /**
@@ -15,15 +16,17 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
      */
     public Chat_Left_With_Profile() {
         initComponents();
-        txt.setBackground(new Color(199, 243, 215));
+        txt.setBackground(UiTheme.BUBBLE_IN);
+        txt.setForeground(UiTheme.TEXT);
     }
 
     public void setUserProfile(String user) {
+        IaImage.setInitials(user != null ? user : "?");
         txt.setUserProfile(user);
     }
 
-    public void setImageProfile(Icon image) {
-        IaImage.setImage(image);
+    public void setImageProfile(String user) {
+        IaImage.setInitials(user != null ? user : "?");
     }
 
     public void setText(String text) {
@@ -49,7 +52,17 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");  //Testing
+        txt.setTime(java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
+                .withZone(java.time.ZoneId.systemDefault()).format(java.time.Instant.now()));
+    }
+
+    public void setTime(java.time.Instant time) {
+        if (time == null) {
+            setTime();
+            return;
+        }
+        txt.setTime(java.time.format.DateTimeFormatter.ofPattern("hh:mm a")
+                .withZone(java.time.ZoneId.systemDefault()).format(time));
     }
 
     /**
@@ -61,43 +74,27 @@ public class Chat_Left_With_Profile extends javax.swing.JLayeredPane {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLayeredPane2 = new javax.swing.JLayeredPane();
-        IaImage = new com.nafiz.swing.ImageAvatar();
+        IaImage = new com.nafiz.swing.InitialsAvatar("?");
         txt = new com.nafiz.component.Chat_Item();
 
         setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.LINE_AXIS));
+        setOpaque(false);
 
-        IaImage.setBorderSize(0);
-        IaImage.setImage(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg"))); // NOI18N
-        IaImage.setMaximumSize(new java.awt.Dimension(31, 31));
-        IaImage.setMinimumSize(new java.awt.Dimension(31, 31));
-        IaImage.setPreferredSize(new java.awt.Dimension(31, 31));
+        IaImage.setPreferredSize(new java.awt.Dimension(32, 32));
+        IaImage.setMaximumSize(new java.awt.Dimension(32, 32));
+        IaImage.setMinimumSize(new java.awt.Dimension(32, 32));
+        javax.swing.JPanel avatarWrapper = new javax.swing.JPanel(new java.awt.BorderLayout());
+        avatarWrapper.setOpaque(false);
+        avatarWrapper.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 0, 0, 6));
+        avatarWrapper.add(IaImage, java.awt.BorderLayout.CENTER);
 
-        jLayeredPane2.setLayer(IaImage, javax.swing.JLayeredPane.DEFAULT_LAYER);
-
-        javax.swing.GroupLayout jLayeredPane2Layout = new javax.swing.GroupLayout(jLayeredPane2);
-        jLayeredPane2.setLayout(jLayeredPane2Layout);
-        jLayeredPane2Layout.setHorizontalGroup(
-            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jLayeredPane2Layout.createSequentialGroup()
-                .addComponent(IaImage, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-        );
-        jLayeredPane2Layout.setVerticalGroup(
-            jLayeredPane2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(IaImage, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
-
-        add(jLayeredPane2);
+        add(avatarWrapper);
         add(txt);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private com.nafiz.swing.ImageAvatar IaImage;
-    private javax.swing.JLayeredPane jLayeredPane2;
+    private com.nafiz.swing.InitialsAvatar IaImage;
     private com.nafiz.component.Chat_Item txt;
     // End of variables declaration//GEN-END:variables
 }

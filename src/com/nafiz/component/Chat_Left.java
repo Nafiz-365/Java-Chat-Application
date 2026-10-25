@@ -4,7 +4,7 @@
  */
 package com.nafiz.component;
 
-import java.awt.Color;
+import com.nafiz.swing.UiTheme;
 import javax.swing.Icon;
 
 /**
@@ -18,7 +18,8 @@ public class Chat_Left extends javax.swing.JLayeredPane {
      */
     public Chat_Left() {
         initComponents();
-        txt.setBackground(new Color(199, 243, 215));
+        txt.setBackground(UiTheme.BUBBLE_IN);
+        txt.setForeground(UiTheme.TEXT);
     }
 
     public void setText(String text) {

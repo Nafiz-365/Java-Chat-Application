@@ -6,8 +6,10 @@ package com.nafiz.component;
 
 import com.nafiz.event.PublicEvent;
 import com.nafiz.swing.JIMSendTextPane;
+import com.nafiz.swing.RoundedPanel;
 import com.nafiz.swing.ScrollBar;
-import java.awt.Color;
+import com.nafiz.swing.UiTheme;
+import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
 import javax.swing.ImageIcon;
@@ -37,66 +39,103 @@ public class Chat_Bottom extends javax.swing.JPanel {
     }
     
     private void init() {
-        setLayout(new MigLayout("fillx, filly", "0[fill]0[]0[]2", "2[fill]2"));
+        setLayout(new MigLayout("fillx, insets 10 12 10 12", "[shrink 0]6[grow, fill]6[shrink 0]", "[fill]"));
         JScrollPane scroll = new JScrollPane();
         scroll.setBorder(null);
+        scroll.setOpaque(false);
+        scroll.getViewport().setOpaque(false);
         JIMSendTextPane txt = new JIMSendTextPane();
+        txt.setOpaque(true);
+        txt.setBackground(UiTheme.SURFACE);
+        txt.setFont(UiTheme.font(java.awt.Font.PLAIN, 13));
+        txt.setForeground(UiTheme.TEXT);
         JButton cmd = new JButton();
+
+        // ── Attachment button (left) ──────────────────────────────────────
+        JButton cmdAttach = new JButton();
+        cmdAttach.setIcon(com.nafiz.swing.ModernIcons.attachment(UiTheme.MUTED, 20));
+        cmdAttach.setContentAreaFilled(false);
+        cmdAttach.setFocusPainted(false);
+        cmdAttach.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 6, 6, 6));
+        cmdAttach.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        cmdAttach.setToolTipText("Attach file or image");
+        cmdAttach.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) {
+                cmdAttach.setIcon(com.nafiz.swing.ModernIcons.attachment(UiTheme.PRIMARY, 20));
+            }
+            @Override public void mouseExited(java.awt.event.MouseEvent e) {
+                cmdAttach.setIcon(com.nafiz.swing.ModernIcons.attachment(UiTheme.MUTED, 20));
+            }
+        });
+        cmdAttach.addActionListener(e -> {
+            javax.swing.JFileChooser chooser = new javax.swing.JFileChooser();
+            chooser.setDialogTitle("Select file to attach");
+            int res = chooser.showOpenDialog(Chat_Bottom.this);
+            if (res == javax.swing.JFileChooser.APPROVE_OPTION) {
+                java.io.File file = chooser.getSelectedFile();
+                if (file != null && file.exists()) {
+                    long sizeKb = Math.max(1, file.length() / 1024);
+                    String msg = "[Attached: " + file.getName() + " (" + sizeKb + " KB)]";
+                    if (PublicEvent.getInstance().getEventChat() != null) {
+                        PublicEvent.getInstance().getEventChat().sendMessage(msg);
+                    }
+                }
+            }
+        });
+
         txt.getDocument().addDocumentListener(new DocumentListener() {
-            @Override
-            public void insertUpdate(DocumentEvent event) {
-                refresh();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent event) {
-                refresh();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent event) {
-                refresh();
-            }
+            @Override public void insertUpdate(DocumentEvent event) { refresh(); }
+            @Override public void removeUpdate(DocumentEvent event) { refresh(); }
+            @Override public void changedUpdate(DocumentEvent event) { refresh(); }
         });
         txt.getInputMap(JComponent.WHEN_FOCUSED).put(
                 KeyStroke.getKeyStroke("ENTER"), "send-message");
         txt.getActionMap().put("send-message", new AbstractAction() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent event) {
-                cmd.doClick();
-            }
+            @Override public void actionPerformed(java.awt.event.ActionEvent event) { cmd.doClick(); }
         });
         txt.getInputMap(JComponent.WHEN_FOCUSED).put(
                 KeyStroke.getKeyStroke("shift ENTER"), "insert-newline");
         txt.getActionMap().put("insert-newline", new AbstractAction() {
-            @Override
-            public void actionPerformed(java.awt.event.ActionEvent event) {
-                insertNewline(txt);
-            }
+            @Override public void actionPerformed(java.awt.event.ActionEvent event) { insertNewline(txt); }
         });
-        txt.setBorder(new EmptyBorder(5, 5, 5, 5));
-        txt.setHintText("Write Message Here ...");
+        txt.setBorder(new EmptyBorder(8, 10, 8, 10));
+        txt.setHintText("Write a message...");
         scroll.setViewportView(txt);
         ScrollBar sb = new ScrollBar();
-        sb.setBackground(new Color(242,242,242));
+        sb.setBackground(UiTheme.SURFACE);
         sb.setPreferredSize(new Dimension(2, 10));
         scroll.setVerticalScrollBar(sb);
-        add(sb);
-        add(scroll, "w 100%");
-        JPanel panel = new JPanel();
-        panel.setLayout(new MigLayout("filly", "0[]0", "0[bottom]0"));
-        panel.setPreferredSize(new Dimension(30, 28));
-        panel.setBackground(Color.WHITE);
-        
-        cmd.setBorder(null);
+        RoundedPanel composer = new RoundedPanel(new BorderLayout(), 18);
+        composer.setBackground(UiTheme.SURFACE);
+        composer.add(scroll, BorderLayout.CENTER);
+
+        // ── Send button (right) ───────────────────────────────────────────
+        cmd.setBorder(javax.swing.BorderFactory.createEmptyBorder(9, 11, 9, 11));
         cmd.setContentAreaFilled(false);
+        cmd.setOpaque(true);
+        cmd.setBackground(UiTheme.PRIMARY);
         cmd.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        cmd.setIcon(new ImageIcon(getClass().getResource("/com/nafiz/icon/send.png")));  //Send button Image added
-        cmd.addActionListener(event -> {
-            sendMessage(txt);
+        cmd.setToolTipText("Send message (Enter)");
+        cmd.setIcon(com.nafiz.swing.ModernIcons.send(java.awt.Color.WHITE, 18));
+        cmd.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override public void mouseEntered(java.awt.event.MouseEvent e) {
+                cmd.setBackground(UiTheme.PRIMARY_HOVER);
+            }
+            @Override public void mouseExited(java.awt.event.MouseEvent e) {
+                cmd.setBackground(UiTheme.PRIMARY);
+            }
         });
-        panel.add(cmd);
-        add(panel);
+        cmd.addActionListener(event -> sendMessage(txt));
+
+        add(cmdAttach);
+        add(composer, "growx");
+        JPanel sendWrap = new JPanel(new MigLayout("filly", "0[]0", "0[bottom]0"));
+        sendWrap.setOpaque(false);
+        sendWrap.add(cmd);
+        add(sendWrap);
+        setBorder(javax.swing.BorderFactory.createCompoundBorder(
+                javax.swing.BorderFactory.createMatteBorder(1, 0, 0, 0, UiTheme.BORDER),
+                javax.swing.BorderFactory.createEmptyBorder(2, 0, 2, 0)));
     }
 
     private void sendMessage(JIMSendTextPane txt) {
@@ -137,7 +176,7 @@ public class Chat_Bottom extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(242, 242, 242));
+        setBackground(UiTheme.SURFACE_WHITE);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

@@ -5,6 +5,7 @@
 package com.nafiz.form;
 
 import com.nafiz.event.PublicEvent;
+import com.nafiz.swing.UiTheme;
 
 /**
  *
@@ -43,45 +44,35 @@ public class P_Login extends javax.swing.JPanel {
         rememberMe = new javax.swing.JCheckBox();
         showPassword = new javax.swing.JCheckBox();
 
-        setBackground(java.awt.Color.WHITE);
-        setOpaque(true);
+        setOpaque(false);
         setBorder(javax.swing.BorderFactory.createEmptyBorder());
         rememberMe.setText("Remember me");
         rememberMe.setOpaque(false);
-        rememberMe.setForeground(new java.awt.Color(71, 85, 105));
+        rememberMe.setForeground(UiTheme.LABEL);
+        rememberMe.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         showPassword.setText("Show password");
         showPassword.setOpaque(false);
-        showPassword.setForeground(new java.awt.Color(71, 85, 105));
+        showPassword.setForeground(UiTheme.LABEL);
+        showPassword.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         showPassword.addActionListener(evt -> txtPass.setEchoChar(
                 showPassword.isSelected() ? (char) 0 : '\u2022'));
         String savedUser = java.util.prefs.Preferences.userNodeForPackage(P_Login.class)
                 .get("username", "");
         txtUser.setText(savedUser);
         rememberMe.setSelected(!savedUser.isEmpty());
-        txtUser.setOpaque(true);
-        txtUser.setBackground(new java.awt.Color(248, 250, 252));
-        txtUser.setForeground(new java.awt.Color(15, 23, 42));
-        txtUser.setCaretColor(new java.awt.Color(15, 23, 42));
-        txtUser.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(203, 213, 225), 1, true),
-                javax.swing.BorderFactory.createEmptyBorder(7, 10, 7, 10)));
-        txtUser.setPreferredSize(new java.awt.Dimension(240, 38));
-        txtPass.setOpaque(true);
-        txtPass.setBackground(new java.awt.Color(248, 250, 252));
-        txtPass.setForeground(new java.awt.Color(15, 23, 42));
-        txtPass.setCaretColor(new java.awt.Color(15, 23, 42));
-        txtPass.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(203, 213, 225), 1, true),
-                javax.swing.BorderFactory.createEmptyBorder(7, 10, 7, 10)));
-        txtPass.setPreferredSize(new java.awt.Dimension(240, 38));
+        UiTheme.styleField(txtUser);
+        txtUser.setPreferredSize(new java.awt.Dimension(240, 40));
+        UiTheme.styleField(txtPass);
+        txtPass.setPreferredSize(new java.awt.Dimension(240, 40));
         txtPass.setEchoChar('\u2022');
 
-        lbTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 24)); // NOI18N
-        lbTitle.setForeground(new java.awt.Color(15, 23, 42));
-        lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Welcome back");
+        lbTitle.setFont(UiTheme.font(java.awt.Font.BOLD, 18));
+        lbTitle.setForeground(UiTheme.TEXT);
+        lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbTitle.setText("Sign in");
 
-        jLabel1.setForeground(new java.awt.Color(71, 85, 105));
+        jLabel1.setForeground(UiTheme.LABEL);
+        jLabel1.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel1.setText("Username");
 
         txtUser.addActionListener(new java.awt.event.ActionListener() {
@@ -90,7 +81,8 @@ public class P_Login extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setForeground(new java.awt.Color(71, 85, 105));
+        jLabel2.setForeground(UiTheme.LABEL);
+        jLabel2.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel2.setText("Password");
 
         txtPass.addActionListener(new java.awt.event.ActionListener() {
@@ -99,22 +91,16 @@ public class P_Login extends javax.swing.JPanel {
             }
         });
 
-        cmdLogin.setText("Login");
-        cmdLogin.setBackground(new java.awt.Color(37, 99, 235));
-        cmdLogin.setForeground(java.awt.Color.WHITE);
-        cmdLogin.setBorder(javax.swing.BorderFactory.createEmptyBorder(8, 12, 8, 12));
-        cmdLogin.setFocusPainted(false);
+        cmdLogin.setText("Continue");
+        UiTheme.stylePrimaryButton(cmdLogin);
         cmdLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdLoginActionPerformed(evt);
             }
         });
 
-        cmdRegister.setFont(new java.awt.Font("Segoe UI", 0, 12)); // NOI18N
-        cmdRegister.setForeground(new java.awt.Color(37, 99, 235));
-        cmdRegister.setText("Don't have an account? Register");
-        cmdRegister.setContentAreaFilled(false);
-        cmdRegister.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        cmdRegister.setText("Don't have an account? Create one");
+        UiTheme.styleLinkButton(cmdRegister);
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdRegisterActionPerformed(evt);
@@ -126,12 +112,12 @@ public class P_Login extends javax.swing.JPanel {
         constraints.gridx = 0;
         constraints.weightx = 1.0;
         constraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+        constraints.insets = new java.awt.Insets(4, 8, 4, 8);
 
         constraints.gridy = 0;
-        constraints.insets = new java.awt.Insets(10, 20, 18, 20);
+        constraints.insets = new java.awt.Insets(8, 8, 12, 8);
         add(lbTitle, constraints);
-        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+        constraints.insets = new java.awt.Insets(4, 8, 4, 8);
         constraints.gridy++;
         add(jLabel1, constraints);
         constraints.gridy++;
@@ -146,14 +132,14 @@ public class P_Login extends javax.swing.JPanel {
         options.add(rememberMe);
         options.add(showPassword);
         constraints.gridy++;
-        constraints.insets = new java.awt.Insets(4, 20, 10, 20);
+        constraints.insets = new java.awt.Insets(4, 8, 10, 8);
         add(options, constraints);
 
         constraints.gridy++;
-        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+        constraints.insets = new java.awt.Insets(4, 8, 4, 8);
         add(cmdLogin, constraints);
         constraints.gridy++;
-        constraints.insets = new java.awt.Insets(2, 20, 10, 20);
+        constraints.insets = new java.awt.Insets(2, 8, 8, 8);
         add(cmdRegister, constraints);
     }// </editor-fold>//GEN-END:initComponents
 

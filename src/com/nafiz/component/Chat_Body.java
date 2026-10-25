@@ -6,8 +6,8 @@ package com.nafiz.component;
 
 import com.nafiz.chat.ChatMessage;
 import com.nafiz.swing.ScrollBar;
+import com.nafiz.swing.UiTheme;
 import java.awt.Adjustable;
-import java.awt.Color;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import javax.swing.Icon;
@@ -29,29 +29,33 @@ public class Chat_Body extends javax.swing.JPanel {
         initComponents();
         init();
 
-//      addItemLeft("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", "Nafiz");
-//        addItemRight("Hello \ntewffedgg\nygeygd");
-//        addItemLeft("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", "Kalam", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
-//        addItemRight("does not word warp it at all showing all the text in one line only instead. It would be interesting to support word warp on jTextPane1 resize too...", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/cat.png")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
-//        String img[] = {"LRMj,K-:?G9G_JIon}WqD~ITRPs,", "LOI}-B004pI;~qROIoW=4:jYxtxu"};
-//        addItemLeft("Hello \ntewffedgg\nygeygd", "Oli", img);
-//        addItemLeft("Hello \ntewffedgg\nygeygd", "Proshanto", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg")), new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/dog.jpg")));
-//        addItemRight("Hello \ntewffedgg\nygeygd", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
-//        addDate("Today");
-//        addItemLeft("Hello \ntewffedgg\nygeygd", "Rayhan");
-//        addItemLeft("", "Talha", new ImageIcon(getClass().getResource("/com/nafiz/icon/testing/pic.jpg")));
-//        addItemFile("my file", "Proshanto", "my doc.pdf", "1 MB");
-//        addItemFileRight("","myfile.rar", "15 MB");
     }
 
     private void init() {
-        body.setLayout(new MigLayout("fillx", "", "5[]5"));
+        body.setLayout(new MigLayout("fillx, insets 18 22 18 22", "", "8[]8"));
         sp.setVerticalScrollBar(new ScrollBar());
-        sp.getVerticalScrollBar().setBackground(Color.WHITE);
-        emptyState = new JLabel("Select a conversation or send a message to get started.");
-        emptyState.setForeground(new Color(100, 116, 139));
-        emptyState.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        body.add(emptyState, "wrap, growx, pushy, align center");
+        sp.getVerticalScrollBar().setBackground(UiTheme.SURFACE);
+        showEmptyState();
+    }
+
+    private void showEmptyState() {
+        if (emptyState == null) {
+            emptyState = new JLabel("<html><div style='text-align:center;width:280px'>"
+                    + "<div style='font-size:16px;color:#0F172A;font-weight:700;padding-bottom:8px'>Start this conversation</div>"
+                    + "<div style='color:#64748B;font-size:12px'>Your messages stay on this computer. Write something below to begin.</div>"
+                    + "</div></html>");
+            emptyState.setForeground(UiTheme.MUTED);
+            emptyState.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+            body.add(emptyState, "wrap, growx, pushy, align center, gapy 90");
+        }
+    }
+
+    public void clearChat() {
+        body.removeAll();
+        emptyState = null;
+        showEmptyState();
+        body.repaint();
+        body.revalidate();
     }
 
     private void removeEmptyState() {
@@ -61,6 +65,18 @@ public class Chat_Body extends javax.swing.JPanel {
         }
     }
 
+    public void addItemLeft(ChatMessage message) {
+        removeEmptyState();
+        Chat_Left_With_Profile item = new Chat_Left_With_Profile();
+        item.setText(message.content());
+        item.setTime(message.createdAt());
+        item.setUserProfile(message.sender());
+        body.add(item, "wrap, w 100:: 72%");
+        body.repaint();
+        body.revalidate();
+        scrollToBottom();
+    }
+
     public void addItemLeft(String text, String user, Icon... image) {
         removeEmptyState();
         Chat_Left_With_Profile item = new Chat_Left_With_Profile();
@@ -68,7 +84,7 @@ public class Chat_Body extends javax.swing.JPanel {
         item.setImage(image);
         item.setTime();
         item.setUserProfile(user);
-        body.add(item, "wrap, w 100:: 50%");
+        body.add(item, "wrap, w 100:: 72%");
         //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
@@ -81,7 +97,7 @@ public class Chat_Body extends javax.swing.JPanel {
         item.setImage(image);
         item.setTime();
         item.setUserProfile(user);
-        body.add(item, "wrap, w 100:: 50%");
+        body.add(item, "wrap, w 100:: 72%");
         //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
@@ -94,7 +110,7 @@ public class Chat_Body extends javax.swing.JPanel {
         item.setFile(fileName, fileSize);
         item.setTime();
         item.setUserProfile(user);
-        body.add(item, "wrap, w 100:: 50%");
+        body.add(item, "wrap, w 100:: 72%");
         //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
@@ -105,7 +121,7 @@ public class Chat_Body extends javax.swing.JPanel {
         Chat_Right item = new Chat_Right();
         item.setText(text);
         item.setImage(image);
-        body.add(item, "wrap, al right, w 100:: 50%");
+        body.add(item, "wrap, al right, w 100:: 72%");
         //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
@@ -119,7 +135,7 @@ public class Chat_Body extends javax.swing.JPanel {
         Chat_Right item = new Chat_Right();
         item.setText(message.content());
         item.setTime(message.createdAt());
-        body.add(item, "wrap, al right, w 100:: 50%");
+        body.add(item, "wrap, al right, w 100:: 72%");
         body.repaint();
         body.revalidate();
         scrollToBottom();
@@ -130,7 +146,7 @@ public class Chat_Body extends javax.swing.JPanel {
         Chat_Right item = new Chat_Right();
         item.setText(text);
         item.setFile(fileName, fileSize);
-        body.add(item, "wrap, al right, w 100:: 50%");
+        body.add(item, "wrap, al right, w 100:: 72%");
         //  ::50% set max  with 50%
         body.repaint();
         body.revalidate();
@@ -161,7 +177,7 @@ public class Chat_Body extends javax.swing.JPanel {
         sp.setBorder(null);
         sp.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        body.setBackground(new java.awt.Color(255, 255, 255));
+        body.setBackground(UiTheme.SURFACE);
 
         javax.swing.GroupLayout bodyLayout = new javax.swing.GroupLayout(body);
         body.setLayout(bodyLayout);

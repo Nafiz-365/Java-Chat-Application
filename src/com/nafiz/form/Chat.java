@@ -14,6 +14,7 @@ import com.nafiz.chat.LocalConversationService;
 import com.nafiz.chat.LocalChatTransport;
 import com.nafiz.event.EventChat;
 import com.nafiz.event.PublicEvent;
+import java.awt.Color;
 import net.miginfocom.swing.MigLayout;
 
 /**
@@ -22,6 +23,10 @@ import net.miginfocom.swing.MigLayout;
  */
 public class Chat extends javax.swing.JPanel {
     private ChatTransport transport;
+    private Chat_Title chatTitle;
+    private Chat_Body chatBody;
+    private static final String CONVERSATION_ID = "local";
+    private String conversationId = CONVERSATION_ID;
 
     /**
      * Creates new form Menu_Left
@@ -32,19 +37,41 @@ public class Chat extends javax.swing.JPanel {
     }
 
     private void init() {
-        setLayout(new MigLayout("fillx", "0[fill]0", "0[]0[100%, bottom]0[shrink 0]0"));
-        Chat_Title chatTitle = new Chat_Title();
-        Chat_Body chatBody = new Chat_Body();
+        setLayout(new MigLayout("fill, insets 0, wrap 1", "0[grow, fill]0",
+                "0[shrink 0][grow, fill][shrink 0]0"));
+        chatTitle = new Chat_Title();
+        chatTitle.setUserName("Your conversation");
+        chatTitle.setStatusText("Local workspace");
+        chatBody = new Chat_Body();
         Chat_Bottom chatBottom = new Chat_Bottom();
         transport = new LocalChatTransport(new LocalConversationService());
         transport.setListener(new ChatTransport.Listener() {
             @Override
             public void onConnected() {
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    chatBody.clearChat();
+                    java.util.List<ChatMessage> history = transport.history(conversationId);
+                    String currentUser = Session.getUsername();
+                    for (ChatMessage msg : history) {
+                        if (currentUser != null && currentUser.equalsIgnoreCase(msg.sender())) {
+                            chatBody.addItemRight(msg);
+                        } else {
+                            chatBody.addItemLeft(msg);
+                        }
+                    }
+                });
             }
 
             @Override
             public void onMessage(ChatMessage message) {
-                javax.swing.SwingUtilities.invokeLater(() -> chatBody.addItemRight(message));
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    String currentUser = Session.getUsername();
+                    if (currentUser != null && currentUser.equalsIgnoreCase(message.sender())) {
+                        chatBody.addItemRight(message);
+                    } else {
+                        chatBody.addItemLeft(message);
+                    }
+                });
             }
 
             @Override
@@ -56,9 +83,9 @@ public class Chat extends javax.swing.JPanel {
 
             @Override
             public void onDisconnected() {
+                javax.swing.SwingUtilities.invokeLater(() -> chatBody.clearChat());
             }
         });
-        transport.connect();
         PublicEvent.getInstance().addEventChat(new EventChat() {
             @Override
             public void sendMessage(String text) {
@@ -66,14 +93,68 @@ public class Chat extends javax.swing.JPanel {
                 if (sender == null) {
                     return;
                 }
-                transport.send("local", sender, text);
+                transport.send(conversationId, sender, text);
+            }
+
+            @Override
+            public void selectConversation(String name) {
+                chatTitle.setUserName(name);
+                chatTitle.statusActive();
+                String targetId = name == null ? CONVERSATION_ID : name.trim().toLowerCase().replaceAll("[^a-z0-9_-]", "_");
+                if (!conversationId.equals(targetId)) {
+                    conversationId = targetId;
+                    chatBody.clearChat();
+                    java.util.List<ChatMessage> history = transport.history(conversationId);
+                    String currentUser = Session.getUsername();
+                    for (ChatMessage msg : history) {
+                        if (currentUser != null && currentUser.equalsIgnoreCase(msg.sender())) {
+                            chatBody.addItemRight(msg);
+                        } else {
+                            chatBody.addItemLeft(msg);
+                        }
+                    }
+                }
+                if (onConversationSelected != null) {
+                    onConversationSelected.run();
+                }
             }
         });
 
-        add(chatTitle, "wrap");
-        add(chatBody, "wrap");
-        add(chatBottom, "h :: 50%");
+        add(chatTitle, "growx, wrap");
+        add(chatBody, "grow, push, wrap");
+        add(chatBottom, "growx");
 
+    }
+
+    private Runnable onConversationSelected;
+
+    public void setOnConversationSelected(Runnable action) {
+        this.onConversationSelected = action;
+    }
+
+    public void setOnBack(Runnable action) {
+        if (chatTitle != null) {
+            chatTitle.setOnBack(action);
+        }
+    }
+
+    public void setBackVisible(boolean visible) {
+        if (chatTitle != null) {
+            chatTitle.setBackVisible(visible);
+        }
+    }
+
+    public void setOnToggleDetails(Runnable action) {
+        if (chatTitle != null) {
+            chatTitle.setOnToggleDetails(action);
+        }
+    }
+
+    /** Sync the Details button arrow indicator (▶/◀) with the actual slider state */
+    public void setDetailsOpen(boolean open) {
+        if (chatTitle != null) {
+            chatTitle.setDetailsOpen(open);
+        }
     }
 
     public void connect() {
@@ -86,18 +167,19 @@ public class Chat extends javax.swing.JPanel {
         if (transport.isConnected()) {
             transport.disconnect();
         }
+        if (chatBody != null) {
+            chatBody.clearChat();
+        }
     }
 
     /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
+     * Initializes the visual shell used by the generated form editor.
      */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setBackground(new java.awt.Color(255, 255, 255));
+        setBackground(new Color(248, 250, 252));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

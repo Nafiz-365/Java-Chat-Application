@@ -39,8 +39,10 @@ public class View_Image extends javax.swing.JComponent {
             }
         });
 
-        cmdSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/com/nafiz/icon/save.png"))); // NOI18N
-        cmdSave.setContentAreaFilled(false);
+        cmdSave.setIcon(com.nafiz.swing.ModernIcons.save(java.awt.Color.WHITE, 22));
+        cmdSave.setContentAreaFilled(true);
+        cmdSave.setBackground(new java.awt.Color(37, 99, 235));
+        cmdSave.setOpaque(true);
         cmdSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         cmdSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

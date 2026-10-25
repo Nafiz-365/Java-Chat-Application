@@ -32,7 +32,8 @@ public class Chat_Date extends javax.swing.JLayeredPane {
         line1 = new com.nafiz.swing.Line();
         line2 = new com.nafiz.swing.Line();
 
-        lbDate.setForeground(new java.awt.Color(191, 191, 191));
+        lbDate.setForeground(new java.awt.Color(100, 116, 139));
+        lbDate.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 11));
         lbDate.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lbDate.setText("06/06/2021");
 

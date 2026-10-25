@@ -4,8 +4,10 @@
  */
 package com.nafiz.component;
 
-import java.awt.Color;
+import com.nafiz.swing.UiTheme;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import javax.swing.Icon;
 import javax.swing.JButton;
 
@@ -53,8 +55,11 @@ public class MenuButton extends JButton {
     protected void paintComponent(Graphics grphcs) {
         super.paintComponent(grphcs);
         if (isSelected()) {
-            grphcs.setColor(new Color(110, 213, 255));
-            grphcs.fillRect(0, getHeight() - 3, getWidth(), getHeight());
+            Graphics2D g2 = (Graphics2D) grphcs.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2.setColor(UiTheme.PRIMARY);
+            g2.fillRoundRect(10, getHeight() - 5, getWidth() - 20, 3, 3, 3);
+            g2.dispose();
         }
     }
 }

@@ -5,6 +5,7 @@
 package com.nafiz.form;
 
 import com.nafiz.event.PublicEvent;
+import com.nafiz.swing.UiTheme;
 
 /**
  *
@@ -23,6 +24,11 @@ public class P_Register extends javax.swing.JPanel {
         txtUser.setText("");
         txtPass.setText("");
         txtRePassword.setText("");
+        if (showPassword != null) {
+            showPassword.setSelected(false);
+            txtPass.setEchoChar('\u2022');
+            txtRePassword.setEchoChar('\u2022');
+        }
         txtUser.requestFocusInWindow();
     }
 
@@ -44,42 +50,35 @@ public class P_Register extends javax.swing.JPanel {
         cmdBackLogin = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         txtRePassword = new javax.swing.JPasswordField();
+        showPassword = new javax.swing.JCheckBox();
 
-        setBackground(java.awt.Color.WHITE);
-        setOpaque(true);
+        setOpaque(false);
         setBorder(javax.swing.BorderFactory.createEmptyBorder());
-        txtUser.setOpaque(true);
-        txtUser.setBackground(new java.awt.Color(248, 250, 252));
-        txtUser.setForeground(new java.awt.Color(15, 23, 42));
-        txtUser.setCaretColor(new java.awt.Color(15, 23, 42));
-        txtUser.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(203, 213, 225), 1, true),
-                javax.swing.BorderFactory.createEmptyBorder(7, 10, 7, 10)));
-        txtUser.setPreferredSize(new java.awt.Dimension(240, 38));
-        txtPass.setOpaque(true);
-        txtPass.setBackground(new java.awt.Color(248, 250, 252));
-        txtPass.setForeground(new java.awt.Color(15, 23, 42));
-        txtPass.setCaretColor(new java.awt.Color(15, 23, 42));
-        txtPass.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(203, 213, 225), 1, true),
-                javax.swing.BorderFactory.createEmptyBorder(7, 10, 7, 10)));
-        txtPass.setPreferredSize(new java.awt.Dimension(240, 38));
+        UiTheme.styleField(txtUser);
+        txtUser.setPreferredSize(new java.awt.Dimension(240, 40));
+        UiTheme.styleField(txtPass);
+        txtPass.setPreferredSize(new java.awt.Dimension(240, 40));
         txtPass.setEchoChar('\u2022');
-        txtRePassword.setOpaque(true);
-        txtRePassword.setBackground(new java.awt.Color(248, 250, 252));
-        txtRePassword.setForeground(new java.awt.Color(15, 23, 42));
-        txtRePassword.setCaretColor(new java.awt.Color(15, 23, 42));
-        txtRePassword.setBorder(javax.swing.BorderFactory.createCompoundBorder(
-                javax.swing.BorderFactory.createLineBorder(new java.awt.Color(203, 213, 225), 1, true),
-                javax.swing.BorderFactory.createEmptyBorder(7, 10, 7, 10)));
-        txtRePassword.setPreferredSize(new java.awt.Dimension(240, 38));
+        UiTheme.styleField(txtRePassword);
+        txtRePassword.setPreferredSize(new java.awt.Dimension(240, 40));
+        txtRePassword.setEchoChar('\u2022');
+        showPassword.setText("Show password");
+        showPassword.setOpaque(false);
+        showPassword.setForeground(UiTheme.LABEL);
+        showPassword.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
+        showPassword.addActionListener(evt -> {
+            char echo = showPassword.isSelected() ? (char) 0 : '\u2022';
+            txtPass.setEchoChar(echo);
+            txtRePassword.setEchoChar(echo);
+        });
 
-        lbTitle.setFont(new java.awt.Font("Segoe UI", java.awt.Font.BOLD, 24)); // NOI18N
-        lbTitle.setForeground(new java.awt.Color(15, 23, 42));
-        lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lbTitle.setText("Create your account");
+        lbTitle.setFont(UiTheme.font(java.awt.Font.BOLD, 18));
+        lbTitle.setForeground(UiTheme.TEXT);
+        lbTitle.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lbTitle.setText("Create account");
 
-        jLabel1.setForeground(new java.awt.Color(71, 85, 105));
+        jLabel1.setForeground(UiTheme.LABEL);
+        jLabel1.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel1.setText("Username");
 
         txtUser.addActionListener(new java.awt.event.ActionListener() {
@@ -88,7 +87,8 @@ public class P_Register extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setForeground(new java.awt.Color(71, 85, 105));
+        jLabel2.setForeground(UiTheme.LABEL);
+        jLabel2.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
         jLabel2.setText("Password");
 
         txtPass.addActionListener(new java.awt.event.ActionListener() {
@@ -97,29 +97,25 @@ public class P_Register extends javax.swing.JPanel {
             }
         });
 
-        cmdRegister.setText("Register");
-        cmdRegister.setBackground(new java.awt.Color(37, 99, 235));
-        cmdRegister.setForeground(java.awt.Color.WHITE);
-        cmdRegister.setFocusPainted(false);
+        cmdRegister.setText("Create account");
+        UiTheme.stylePrimaryButton(cmdRegister);
         cmdRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdRegisterActionPerformed(evt);
             }
         });
 
-        cmdBackLogin.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        cmdBackLogin.setForeground(new java.awt.Color(37, 99, 235));
         cmdBackLogin.setText("Already have an account? Sign in");
-        cmdBackLogin.setContentAreaFilled(false);
-        cmdBackLogin.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        UiTheme.styleLinkButton(cmdBackLogin);
         cmdBackLogin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cmdBackLoginActionPerformed(evt);
             }
         });
 
-        jLabel3.setForeground(new java.awt.Color(71, 85, 105));
-        jLabel3.setText("Confirm Password");
+        jLabel3.setForeground(UiTheme.LABEL);
+        jLabel3.setFont(UiTheme.font(java.awt.Font.PLAIN, 12));
+        jLabel3.setText("Confirm password");
 
         txtRePassword.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -132,12 +128,12 @@ public class P_Register extends javax.swing.JPanel {
         constraints.gridx = 0;
         constraints.weightx = 1.0;
         constraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+        constraints.insets = new java.awt.Insets(3, 8, 3, 8);
 
         constraints.gridy = 0;
-        constraints.insets = new java.awt.Insets(10, 20, 18, 20);
+        constraints.insets = new java.awt.Insets(8, 8, 10, 8);
         add(lbTitle, constraints);
-        constraints.insets = new java.awt.Insets(4, 20, 4, 20);
+        constraints.insets = new java.awt.Insets(3, 8, 3, 8);
         constraints.gridy++;
         add(jLabel1, constraints);
         constraints.gridy++;
@@ -151,10 +147,13 @@ public class P_Register extends javax.swing.JPanel {
         constraints.gridy++;
         add(txtRePassword, constraints);
         constraints.gridy++;
-        constraints.insets = new java.awt.Insets(12, 20, 4, 20);
+        constraints.insets = new java.awt.Insets(4, 8, 8, 8);
+        add(showPassword, constraints);
+        constraints.gridy++;
+        constraints.insets = new java.awt.Insets(6, 8, 4, 8);
         add(cmdRegister, constraints);
         constraints.gridy++;
-        constraints.insets = new java.awt.Insets(2, 20, 10, 20);
+        constraints.insets = new java.awt.Insets(2, 8, 8, 8);
         add(cmdBackLogin, constraints);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -199,6 +198,7 @@ public class P_Register extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel lbTitle;
+    private javax.swing.JCheckBox showPassword;
     private javax.swing.JPasswordField txtPass;
     private javax.swing.JPasswordField txtRePassword;
     private javax.swing.JTextField txtUser;

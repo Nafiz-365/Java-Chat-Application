@@ -4,6 +4,8 @@
  */
 package com.nafiz.component;
 
+import com.nafiz.swing.ModernIcons;
+import com.nafiz.swing.UiTheme;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
@@ -11,7 +13,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -30,9 +31,11 @@ public class Chat_Item extends javax.swing.JLayeredPane {
 
     public Chat_Item() {
         initComponents();
+        setOpaque(false);
         txt.setEditable(false);
         txt.setBackground(new Color(0, 0, 0, 0));
         txt.setOpaque(false);
+        txt.setFont(new java.awt.Font("Segoe UI", java.awt.Font.PLAIN, 13));
     }
 
     public void setUserProfile(String user) {
@@ -44,7 +47,7 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         cmd.setBorder(null);
         cmd.setContentAreaFilled(false);
         cmd.setFocusable(false);
-        cmd.setForeground(new Color(30, 121, 213));
+        cmd.setForeground(UiTheme.PRIMARY);
         cmd.setFont(new java.awt.Font("Segoe UI", 1, 13));
         txt.setBorder(javax.swing.BorderFactory.createEmptyBorder(5, 10, 5, 10));
         layer.add(cmd);
@@ -55,12 +58,23 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         txt.setText(text);
     }
 
+    @Override
+    public void setForeground(Color color) {
+        super.setForeground(color);
+        if (txt != null) {
+            txt.setForeground(color);
+        }
+    }
+
     public void setTime(String time) {
         JLayeredPane layer = new JLayeredPane();
         layer.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         layer.setBorder(new EmptyBorder(0, 5, 10, 5));
         label = new JLabel(time);
-        label.setForeground(new Color(110, 110, 110));
+        Color timeColor = UiTheme.BUBBLE_OUT.equals(getBackground())
+                ? new Color(191, 219, 254)
+                : UiTheme.MUTED;
+        label.setForeground(timeColor);
         label.setHorizontalTextPosition(JLabel.LEFT);
         layer.add(label);
         add(layer);
@@ -101,13 +115,13 @@ public class Chat_Item extends javax.swing.JLayeredPane {
 
     public void sendSuccess() {
         if (label != null) {
-            label.setIcon(new ImageIcon(getClass().getResource("/com/nafiz/icon/tick.png")));
+            label.setIcon(ModernIcons.tick(new Color(191, 219, 254), 14));
         }
     }
 
     public void seen() {
         if (label != null) {
-            label.setIcon(new ImageIcon(getClass().getResource("/com/nafiz/icon/double_tick.png")));
+            label.setIcon(ModernIcons.doubleTick(new Color(147, 210, 255), 14));
         }
     }
 
@@ -138,8 +152,8 @@ public class Chat_Item extends javax.swing.JLayeredPane {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(getBackground());
-        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 15, 15);
-        super.paintComponent(g); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 20, 20);
+        super.paintComponent(g);
     }
 
 

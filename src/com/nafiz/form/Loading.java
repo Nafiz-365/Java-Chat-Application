@@ -4,7 +4,12 @@
  */
 package com.nafiz.form;
 
+import com.nafiz.swing.UiTheme;
+import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 /**
  *
@@ -30,9 +35,10 @@ public class Loading extends javax.swing.JComponent {
 
         lb = new javax.swing.JLabel();
 
-        setBackground(new java.awt.Color(15, 23, 42));
-        lb.setFont(new Font("Segoe UI", Font.PLAIN, 16));
-        lb.setForeground(java.awt.Color.WHITE);
+        setOpaque(false);
+        setBackground(new java.awt.Color(15, 23, 42, 140));
+        lb.setFont(UiTheme.font(Font.BOLD, 16));
+        lb.setForeground(Color.WHITE);
         lb.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lb.setText("Signing you in...");
 
@@ -53,6 +59,16 @@ public class Loading extends javax.swing.JComponent {
                 .addGap(0, 0, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    @Override
+    protected void paintComponent(Graphics graphics) {
+        Graphics2D g2 = (Graphics2D) graphics.create();
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(new Color(15, 23, 42, 150));
+        g2.fillRect(0, 0, getWidth(), getHeight());
+        g2.dispose();
+        super.paintComponent(graphics);
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel lb;

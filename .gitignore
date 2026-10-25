@@ -2,8 +2,6 @@
 /bin/
 /out/
 /dist/
-server/target/
-server/.env
 /.idea/workspace.xml
 /.idea/dataSources/
 /nbproject/private/
@@ -11,3 +9,8 @@ server/.env
 hs_err_pid*
 .DS_Store
 Thumbs.db
+
+# Tests and test-only assets are kept out of this repository.
+/test/
+**/src/test/
+**/testing/

@@ -4,7 +4,7 @@ Java Swing desktop chat application prototype with a responsive authentication f
 
 ## Current status
 
-This repository is currently a **desktop prototype**. Login and registration now use a local development account store with PBKDF2 password hashing, while sent messages are still rendered locally. A server, database, multi-user message transport, history, and reconnect logic are not implemented yet.
+This repository is currently a **desktop-first chat prototype**. Login and registration use a local account store with PBKDF2 password hashing, and conversations are intentionally local while the interface is being refined. No server or database is required to run the application.
 
 ## Features
 
@@ -12,7 +12,7 @@ This repository is currently a **desktop prototype**. Login and registration now
 - Remembered username and password visibility toggle.
 - Rounded authentication card with bundled background image.
 - Custom minimize, maximize/restore, and close buttons.
-- Three-column chat shell with contacts, conversation, and profile areas.
+- Three-column chat shell with a calm conversation workspace, navigation, and profile areas.
 - Local outgoing message rendering.
 - Image overlay and chat UI components.
 - Logout confirmation and return to authentication.
@@ -59,6 +59,6 @@ The main class is `com.nafiz.main.Main`.
 | `src/com/nafiz/swing` | Custom Swing controls and helpers |
 | `src/com/nafiz/icon` | UI and background assets |
 | `lib` | Repository-local third-party JARs |
-| `test` | Existing demo/test sources |
+| `src/com/nafiz/auth` | Local authentication and session state |
 
 See [ROADMAP.md](ROADMAP.md), [ARCHITECTURE.md](ARCHITECTURE.md), and [DEVELOPMENT.md](DEVELOPMENT.md) for the next stages.

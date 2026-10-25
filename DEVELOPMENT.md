@@ -11,15 +11,11 @@
 ant clean
 ant compile
 ant jar
-ant test
 ```
 
-The focused service smoke test can also be run from the IDE as `testing.ServiceTest`. It verifies local password authentication, wrong-password rejection, conversation scoping, message IDs, and asynchronous local transport delivery.
-
-The backend foundation is in `server/`. It currently exposes only
-`GET /api/health` and contains a disabled-by-default Flyway PostgreSQL
-migration. Authentication, repositories, and WebSocket messaging are not
-enabled yet. See `server/README.md` and `server/.env.example` for setup.
+The desktop edition intentionally has no backend dependency. Authentication,
+conversation history, and message delivery all use local services so the
+application can be run offline.
 
 Run the packaged application:
 

@@ -1,5 +1,6 @@
 package com.nafiz.component;
 
+import com.nafiz.swing.UiTheme;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.ZoneId;
@@ -17,7 +18,8 @@ public class Chat_Right extends javax.swing.JLayeredPane {
      */
     public Chat_Right() {
         initComponents();
-        txt.setBackground(new Color(179, 233, 255));
+        txt.setBackground(UiTheme.BUBBLE_OUT);
+        txt.setForeground(Color.WHITE);
     }
 
     public void setText(String text) {
@@ -44,7 +46,7 @@ public class Chat_Right extends javax.swing.JLayeredPane {
     }
 
     public void setTime() {
-        txt.setTime("10:30 PM");  //Testing
+        setTime(Instant.now());
     }
 
     public void setTime(Instant time) {
